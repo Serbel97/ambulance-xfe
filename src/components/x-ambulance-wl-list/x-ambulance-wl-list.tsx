@@ -41,13 +41,7 @@ export class XAmbulanceWlList {
     return (
       <Host>
         <md-list>
-          {this.waitingPatients.map(patient =>
-            <md-list-item>
-              <div slot="headline">{patient.name}</div>
-              <div slot="supporting-text">{"Predpokladaný vstup: " + patient.estimatedStart?.toLocaleString()}</div>
-              <md-icon slot="start">person</md-icon>
-            </md-list-item>
-          )}
+          <p>Neda sa svietit!</p>
         </md-list>
       </Host>
     );
