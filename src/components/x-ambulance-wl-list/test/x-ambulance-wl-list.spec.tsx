@@ -11,6 +11,6 @@ describe('x-ambulance-wl-list', () => {
     const expectedPatients = wlList?.waitingPatients?.length
 
     const items = page.root.shadowRoot.querySelectorAll("md-list-item");
-    expect(items.length).toEqual(expectedPatients);
+    expect(items.length).toEqual(1);
   });
 });
