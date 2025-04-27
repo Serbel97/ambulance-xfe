@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Employee List Api
- * Ambulance Employee Administration for Web-In-Cloud system
+ * Hospital Employee Administration for Web-In-Cloud system
  *
  * The version of the OpenAPI document: 1.0.0
  * Contact: xbelake@stuba.sk

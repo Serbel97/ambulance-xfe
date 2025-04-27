@@ -6,69 +6,119 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first": string;
-        /**
-          * The last name
-         */
-        "last": string;
-        /**
-          * The middle name
-         */
-        "middle": string;
-    }
     interface XAmbulanceWlList {
     }
+    interface XEmployeeWlApp {
+        "apiBase": string;
+        "basePath": string;
+        "employeeId": string;
+    }
+    interface XEmployeeWlEditor {
+        "apiBase": string;
+        "entryId": string;
+        "hospitalId": string;
+    }
+    interface XEmployeeWlList {
+        "apiBase": string;
+        "hospitalId": string;
+    }
+}
+export interface XEmployeeWlEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLXEmployeeWlEditorElement;
+}
+export interface XEmployeeWlListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLXEmployeeWlListElement;
 }
 declare global {
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
-    }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
-    };
     interface HTMLXAmbulanceWlListElement extends Components.XAmbulanceWlList, HTMLStencilElement {
     }
     var HTMLXAmbulanceWlListElement: {
         prototype: HTMLXAmbulanceWlListElement;
         new (): HTMLXAmbulanceWlListElement;
     };
+    interface HTMLXEmployeeWlAppElement extends Components.XEmployeeWlApp, HTMLStencilElement {
+    }
+    var HTMLXEmployeeWlAppElement: {
+        prototype: HTMLXEmployeeWlAppElement;
+        new (): HTMLXEmployeeWlAppElement;
+    };
+    interface HTMLXEmployeeWlEditorElementEventMap {
+        "editor-closed": string;
+    }
+    interface HTMLXEmployeeWlEditorElement extends Components.XEmployeeWlEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXEmployeeWlEditorElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlEditorElement, ev: XEmployeeWlEditorCustomEvent<HTMLXEmployeeWlEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXEmployeeWlEditorElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlEditorElement, ev: XEmployeeWlEditorCustomEvent<HTMLXEmployeeWlEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLXEmployeeWlEditorElement: {
+        prototype: HTMLXEmployeeWlEditorElement;
+        new (): HTMLXEmployeeWlEditorElement;
+    };
+    interface HTMLXEmployeeWlListElementEventMap {
+        "entry-clicked": string;
+    }
+    interface HTMLXEmployeeWlListElement extends Components.XEmployeeWlList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXEmployeeWlListElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlListElement, ev: XEmployeeWlListCustomEvent<HTMLXEmployeeWlListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXEmployeeWlListElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlListElement, ev: XEmployeeWlListCustomEvent<HTMLXEmployeeWlListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLXEmployeeWlListElement: {
+        prototype: HTMLXEmployeeWlListElement;
+        new (): HTMLXEmployeeWlListElement;
+    };
     interface HTMLElementTagNameMap {
-        "my-component": HTMLMyComponentElement;
         "x-ambulance-wl-list": HTMLXAmbulanceWlListElement;
+        "x-employee-wl-app": HTMLXEmployeeWlAppElement;
+        "x-employee-wl-editor": HTMLXEmployeeWlEditorElement;
+        "x-employee-wl-list": HTMLXEmployeeWlListElement;
     }
 }
 declare namespace LocalJSX {
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first"?: string;
-        /**
-          * The last name
-         */
-        "last"?: string;
-        /**
-          * The middle name
-         */
-        "middle"?: string;
-    }
     interface XAmbulanceWlList {
     }
+    interface XEmployeeWlApp {
+        "apiBase"?: string;
+        "basePath"?: string;
+        "employeeId"?: string;
+    }
+    interface XEmployeeWlEditor {
+        "apiBase"?: string;
+        "entryId"?: string;
+        "hospitalId"?: string;
+        "onEditor-closed"?: (event: XEmployeeWlEditorCustomEvent<string>) => void;
+    }
+    interface XEmployeeWlList {
+        "apiBase"?: string;
+        "hospitalId"?: string;
+        "onEntry-clicked"?: (event: XEmployeeWlListCustomEvent<string>) => void;
+    }
     interface IntrinsicElements {
-        "my-component": MyComponent;
         "x-ambulance-wl-list": XAmbulanceWlList;
+        "x-employee-wl-app": XEmployeeWlApp;
+        "x-employee-wl-editor": XEmployeeWlEditor;
+        "x-employee-wl-list": XEmployeeWlList;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
             "x-ambulance-wl-list": LocalJSX.XAmbulanceWlList & JSXBase.HTMLAttributes<HTMLXAmbulanceWlListElement>;
+            "x-employee-wl-app": LocalJSX.XEmployeeWlApp & JSXBase.HTMLAttributes<HTMLXEmployeeWlAppElement>;
+            "x-employee-wl-editor": LocalJSX.XEmployeeWlEditor & JSXBase.HTMLAttributes<HTMLXEmployeeWlEditorElement>;
+            "x-employee-wl-list": LocalJSX.XEmployeeWlList & JSXBase.HTMLAttributes<HTMLXEmployeeWlListElement>;
         }
     }
 }
