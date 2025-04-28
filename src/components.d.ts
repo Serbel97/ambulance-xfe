@@ -6,119 +6,106 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    interface XAmbulanceWlList {
-    }
-    interface XEmployeeWlApp {
+    interface XHospitalApp {
         "apiBase": string;
         "basePath": string;
-        "employeeId": string;
+        "hospitalId": string;
     }
-    interface XEmployeeWlEditor {
+    interface XHospitalEditor {
         "apiBase": string;
         "entryId": string;
         "hospitalId": string;
     }
-    interface XEmployeeWlList {
+    interface XHospitalList {
         "apiBase": string;
         "hospitalId": string;
     }
 }
-export interface XEmployeeWlEditorCustomEvent<T> extends CustomEvent<T> {
+export interface XHospitalEditorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXEmployeeWlEditorElement;
+    target: HTMLXHospitalEditorElement;
 }
-export interface XEmployeeWlListCustomEvent<T> extends CustomEvent<T> {
+export interface XHospitalListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLXEmployeeWlListElement;
+    target: HTMLXHospitalListElement;
 }
 declare global {
-    interface HTMLXAmbulanceWlListElement extends Components.XAmbulanceWlList, HTMLStencilElement {
+    interface HTMLXHospitalAppElement extends Components.XHospitalApp, HTMLStencilElement {
     }
-    var HTMLXAmbulanceWlListElement: {
-        prototype: HTMLXAmbulanceWlListElement;
-        new (): HTMLXAmbulanceWlListElement;
+    var HTMLXHospitalAppElement: {
+        prototype: HTMLXHospitalAppElement;
+        new (): HTMLXHospitalAppElement;
     };
-    interface HTMLXEmployeeWlAppElement extends Components.XEmployeeWlApp, HTMLStencilElement {
-    }
-    var HTMLXEmployeeWlAppElement: {
-        prototype: HTMLXEmployeeWlAppElement;
-        new (): HTMLXEmployeeWlAppElement;
-    };
-    interface HTMLXEmployeeWlEditorElementEventMap {
+    interface HTMLXHospitalEditorElementEventMap {
         "editor-closed": string;
     }
-    interface HTMLXEmployeeWlEditorElement extends Components.XEmployeeWlEditor, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXEmployeeWlEditorElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlEditorElement, ev: XEmployeeWlEditorCustomEvent<HTMLXEmployeeWlEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLXHospitalEditorElement extends Components.XHospitalEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXHospitalEditorElementEventMap>(type: K, listener: (this: HTMLXHospitalEditorElement, ev: XHospitalEditorCustomEvent<HTMLXHospitalEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXEmployeeWlEditorElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlEditorElement, ev: XEmployeeWlEditorCustomEvent<HTMLXEmployeeWlEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXHospitalEditorElementEventMap>(type: K, listener: (this: HTMLXHospitalEditorElement, ev: XHospitalEditorCustomEvent<HTMLXHospitalEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXEmployeeWlEditorElement: {
-        prototype: HTMLXEmployeeWlEditorElement;
-        new (): HTMLXEmployeeWlEditorElement;
+    var HTMLXHospitalEditorElement: {
+        prototype: HTMLXHospitalEditorElement;
+        new (): HTMLXHospitalEditorElement;
     };
-    interface HTMLXEmployeeWlListElementEventMap {
+    interface HTMLXHospitalListElementEventMap {
         "entry-clicked": string;
     }
-    interface HTMLXEmployeeWlListElement extends Components.XEmployeeWlList, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLXEmployeeWlListElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlListElement, ev: XEmployeeWlListCustomEvent<HTMLXEmployeeWlListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLXHospitalListElement extends Components.XHospitalList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLXHospitalListElementEventMap>(type: K, listener: (this: HTMLXHospitalListElement, ev: XHospitalListCustomEvent<HTMLXHospitalListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLXEmployeeWlListElementEventMap>(type: K, listener: (this: HTMLXEmployeeWlListElement, ev: XEmployeeWlListCustomEvent<HTMLXEmployeeWlListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLXHospitalListElementEventMap>(type: K, listener: (this: HTMLXHospitalListElement, ev: XHospitalListCustomEvent<HTMLXHospitalListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLXEmployeeWlListElement: {
-        prototype: HTMLXEmployeeWlListElement;
-        new (): HTMLXEmployeeWlListElement;
+    var HTMLXHospitalListElement: {
+        prototype: HTMLXHospitalListElement;
+        new (): HTMLXHospitalListElement;
     };
     interface HTMLElementTagNameMap {
-        "x-ambulance-wl-list": HTMLXAmbulanceWlListElement;
-        "x-employee-wl-app": HTMLXEmployeeWlAppElement;
-        "x-employee-wl-editor": HTMLXEmployeeWlEditorElement;
-        "x-employee-wl-list": HTMLXEmployeeWlListElement;
+        "x-hospital-app": HTMLXHospitalAppElement;
+        "x-hospital-editor": HTMLXHospitalEditorElement;
+        "x-hospital-list": HTMLXHospitalListElement;
     }
 }
 declare namespace LocalJSX {
-    interface XAmbulanceWlList {
-    }
-    interface XEmployeeWlApp {
+    interface XHospitalApp {
         "apiBase"?: string;
         "basePath"?: string;
-        "employeeId"?: string;
+        "hospitalId"?: string;
     }
-    interface XEmployeeWlEditor {
+    interface XHospitalEditor {
         "apiBase"?: string;
         "entryId"?: string;
         "hospitalId"?: string;
-        "onEditor-closed"?: (event: XEmployeeWlEditorCustomEvent<string>) => void;
+        "onEditor-closed"?: (event: XHospitalEditorCustomEvent<string>) => void;
     }
-    interface XEmployeeWlList {
+    interface XHospitalList {
         "apiBase"?: string;
         "hospitalId"?: string;
-        "onEntry-clicked"?: (event: XEmployeeWlListCustomEvent<string>) => void;
+        "onEntry-clicked"?: (event: XHospitalListCustomEvent<string>) => void;
     }
     interface IntrinsicElements {
-        "x-ambulance-wl-list": XAmbulanceWlList;
-        "x-employee-wl-app": XEmployeeWlApp;
-        "x-employee-wl-editor": XEmployeeWlEditor;
-        "x-employee-wl-list": XEmployeeWlList;
+        "x-hospital-app": XHospitalApp;
+        "x-hospital-editor": XHospitalEditor;
+        "x-hospital-list": XHospitalList;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "x-ambulance-wl-list": LocalJSX.XAmbulanceWlList & JSXBase.HTMLAttributes<HTMLXAmbulanceWlListElement>;
-            "x-employee-wl-app": LocalJSX.XEmployeeWlApp & JSXBase.HTMLAttributes<HTMLXEmployeeWlAppElement>;
-            "x-employee-wl-editor": LocalJSX.XEmployeeWlEditor & JSXBase.HTMLAttributes<HTMLXEmployeeWlEditorElement>;
-            "x-employee-wl-list": LocalJSX.XEmployeeWlList & JSXBase.HTMLAttributes<HTMLXEmployeeWlListElement>;
+            "x-hospital-app": LocalJSX.XHospitalApp & JSXBase.HTMLAttributes<HTMLXHospitalAppElement>;
+            "x-hospital-editor": LocalJSX.XHospitalEditor & JSXBase.HTMLAttributes<HTMLXHospitalEditorElement>;
+            "x-hospital-list": LocalJSX.XHospitalList & JSXBase.HTMLAttributes<HTMLXHospitalListElement>;
         }
     }
 }

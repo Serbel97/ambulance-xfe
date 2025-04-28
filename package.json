@@ -34,7 +34,7 @@
   "scripts": {
     "test:jest": "jest --config ./jest.config.js",
     "openapi": "openapi-generator-cli generate",
-    "convert-openapi": "js-yaml  ./api/employee-wl.openapi.yaml > .openapi.json",
+    "convert-openapi": "js-yaml  ./api/hospital.openapi.yaml > .openapi.json",
     "mock-api": "open-api-mocker --schema .openapi.json --port 5002",
     "start:app": "stencil build --dev --watch --serve",
     "start:mock": "run-s convert-openapi mock-api",

@@ -4,19 +4,10 @@
     "useDocker": true,
     "version": "6.6.0",
     "generators": {
-      "ambulance-wl": {
+      "hospital": {
         "generatorName": "typescript-fetch"   ,
-        "glob": "api/ambulance-wl.openapi.yaml",
-        "output": "#{cwd}/src/api/ambulance-wl",
-        "additionalProperties": {
-          "supportsES6": "true",
-          "withInterfaces": true
-        }
-      },
-      "employee-wl": {
-        "generatorName": "typescript-fetch"   ,
-        "glob": "api/employee-wl.openapi.yaml",
-        "output": "#{cwd}/src/api/employee-wl",
+        "glob": "api/hospital.openapi.yaml",
+        "output": "#{cwd}/src/api/hospital",
         "additionalProperties": {
           "supportsES6": "true",
           "withInterfaces": true
