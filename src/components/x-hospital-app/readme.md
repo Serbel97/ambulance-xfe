@@ -18,14 +18,14 @@
 
 ### Depends on
 
-- [x-hospital-editor](../x-hospital-editor)
 - [x-hospital-list](../x-hospital-list)
+- [x-hospital-editor](../x-hospital-editor)
 
 ### Graph
 ```mermaid
 graph TD;
-  x-hospital-app --> x-hospital-editor
   x-hospital-app --> x-hospital-list
+  x-hospital-app --> x-hospital-editor
   style x-hospital-app fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
