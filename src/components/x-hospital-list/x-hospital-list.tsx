@@ -41,21 +41,28 @@ export class XHospitalList {
   render() {
     return (
       <Host>
+        <div class="list-header">
+          <h2>List of employees</h2>
+          <md-filled-button class="add-button" onclick={() => this.entryClicked.emit("@new")}>
+            <md-icon slot="icon">add</md-icon>
+            Add employee
+          </md-filled-button>
+        </div>
+
         {this.errorMessage
           ? <div class="error">{this.errorMessage}</div>
           :
-          <md-list>
-            {this.employees.map((patient) =>
-              <md-list-item onClick={() => this.entryClicked.emit(patient.id)}>
-                <div slot="headline">{patient.name}</div>
-                <md-icon slot="start">person</md-icon>
-              </md-list-item>
-            )}
-          </md-list>
+          <div class="list-container">
+            <md-list>
+              {this.employees.map((employee) =>
+                <md-list-item onClick={() => this.entryClicked.emit(employee.id)}>
+                  <div slot="headline">{employee.name}</div>
+                  <md-icon slot="start">person</md-icon>
+                </md-list-item>
+              )}
+            </md-list>
+          </div>
         }
-        <md-filled-icon-button className="add-button" onclick={() => this.entryClicked.emit("@new")}>
-          <md-icon>add</md-icon>
-        </md-filled-icon-button>
       </Host>
     );
   }
