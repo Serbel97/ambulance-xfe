@@ -8,7 +8,7 @@ import {HospitalEmployeeListApi, EmployeeListEntry, Configuration} from '../../a
 })
 
 export class XHospitalList {
-  @Event({eventName: "entry-clicked"}) entryClicked: EventEmitter<string>;
+  @Event({eventName: "entry-clicked", composed: true}) entryClicked: EventEmitter<string>;
   @Prop() apiBase: string;
   @Prop() hospitalId: string;
   @State() errorMessage: string;
