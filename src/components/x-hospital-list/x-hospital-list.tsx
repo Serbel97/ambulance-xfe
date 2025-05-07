@@ -15,16 +15,16 @@ export class XHospitalList {
 
   employees: EmployeeListEntry[];
 
-  componentWillLoad() {
+  async componentWillLoad() {
     console.log('x-hospital-list: componentWillLoad', { apiBase: this.apiBase, hospitalId: this.hospitalId });
     return this.getEmployeeAsync();
   }
 
-  componentDidLoad() {
+  async componentDidLoad() {
     console.log('x-hospital-list: componentDidLoad', { employeesCount: this.employees?.length });
   }
 
-  componentDidUpdate() {
+  async componentDidUpdate() {
     console.log('x-hospital-list: componentDidUpdate', { employeesCount: this.employees?.length });
   }
 
@@ -43,6 +43,7 @@ export class XHospitalList {
       if (response.raw.status < 299) {
         const data = await response.value();
         console.log('x-hospital-list: getEmployeeAsync - parsed response data', { count: data.length });
+        this.employees = data;
         return data;
       } else {
         this.errorMessage = `Cannot retrieve list of employees: ${response.raw.statusText}`;
@@ -52,6 +53,7 @@ export class XHospitalList {
       this.errorMessage = `Cannot retrieve list of employees: ${err.message || "unknown"}`;
       console.error('x-hospital-list: getEmployeeAsync - exception', { message: err.message, error: err });
     }
+    this.employees = [];
     return [];
   }
 
@@ -96,7 +98,7 @@ export class XHospitalList {
           :
           <div class="list-container">
             <md-list>
-              {this.employees.map((employee) =>
+              {this.employees && this.employees.map((employee) =>
                 <md-list-item onClick={() => this.handleEmployeeClick(employee.id)}>
                   <div slot="headline">{employee.name}</div>
                   <md-icon slot="start">person</md-icon>
