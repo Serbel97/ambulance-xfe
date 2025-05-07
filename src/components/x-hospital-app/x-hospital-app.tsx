@@ -19,18 +19,65 @@ export class XHospitalApp {
   @Prop() apiBase: string;
   @Prop() hospitalId: string;
 
+  componentWillLoad() {
+    console.log('x-hospital-app: componentWillLoad', {
+      basePath: this.basePath,
+      apiBase: this.apiBase,
+      hospitalId: this.hospitalId
+    });
+  }
+
+  componentDidLoad() {
+    console.log('x-hospital-app: componentDidLoad');
+  }
+
+  componentDidUpdate() {
+    console.log('x-hospital-app: componentDidUpdate', {
+      isModalOpen: this.isModalOpen,
+      modalEntryId: this.modalEntryId
+    });
+  }
+
   render() {
-    console.debug("x-hospital-app.render()");
+    console.log("x-hospital-app: render", {
+      isModalOpen: this.isModalOpen,
+      modalEntryId: this.modalEntryId,
+      apiBase: this.apiBase,
+      hospitalId: this.hospitalId
+    });
 
     const handleEntryClicked = (ev: CustomEvent<string>) => {
-      // Open modal for both new and existing patients
-      this.isModalOpen = true;
-      this.modalEntryId = ev.detail;
+      console.log('x-hospital-app: handleEntryClicked event received', {
+        detail: ev.detail,
+        currentModalState: this.isModalOpen
+      });
+
+      try {
+        // Open modal for both new and existing patients
+        this.isModalOpen = true;
+        this.modalEntryId = ev.detail;
+        console.log('x-hospital-app: Modal state updated', {
+          isModalOpen: this.isModalOpen,
+          modalEntryId: this.modalEntryId
+        });
+      } catch (err) {
+        console.error('x-hospital-app: Error handling entry clicked event', err);
+      }
     };
 
-    const handleEditorClosed = (source: string) => {
-      // Close the modal
-      this.isModalOpen = false;
+    const handleEditorClosed = (ev: CustomEvent<string>) => {
+      console.log('x-hospital-app: handleEditorClosed event received', {
+        detail: ev.detail,
+        currentModalState: this.isModalOpen
+      });
+
+      try {
+        // Close the modal
+        this.isModalOpen = false;
+        console.log('x-hospital-app: Modal closed');
+      } catch (err) {
+        console.error('x-hospital-app: Error handling editor closed event', err);
+      }
     };
 
     return (
