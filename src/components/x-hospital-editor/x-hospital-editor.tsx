@@ -430,7 +430,10 @@ export class XHospitalEditor {
       });
 
       const response = this.entryId == "@new" ?
-        await employeeListApi.createEmployeeListEntryRaw({hospitalId: this.hospitalId, employeeListEntry: this.entry}) :
+        await employeeListApi.createEmployeeListEntryRaw({
+          hospitalId: this.hospitalId,
+          employeeListEntry: this.entry
+        }) :
         await employeeListApi.updateEmployeeListEntryRaw({
           hospitalId: this.hospitalId,
           entryId: this.entryId,

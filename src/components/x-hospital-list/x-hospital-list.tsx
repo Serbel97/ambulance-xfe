@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, Host, Prop, State, h} from '@stencil/core';
+import {Component, Event, EventEmitter, Host, Prop, State, h, Method, Watch} from '@stencil/core';
 import {HospitalEmployeeListApi, EmployeeListEntry, Configuration} from '../../api/hospital';
 
 @Component({
@@ -10,26 +10,40 @@ import {HospitalEmployeeListApi, EmployeeListEntry, Configuration} from '../../a
 export class XHospitalList {
   @Event({eventName: "entry-clicked", composed: true}) entryClicked: EventEmitter<string>;
   @Prop() apiBase: string;
-  @Prop() hospitalId: string;
+  @Prop() hospitalId!: string;
   @State() errorMessage: string;
 
-  employees: EmployeeListEntry[];
+  @State() employees: EmployeeListEntry[] = [];
+
+  // employees: EmployeeListEntry[];
 
   async componentWillLoad() {
-    console.log('x-hospital-list: componentWillLoad', { apiBase: this.apiBase, hospitalId: this.hospitalId });
+    console.log('x-hospital-list: componentWillLoad', {apiBase: this.apiBase, hospitalId: this.hospitalId});
     return this.getEmployeeAsync();
   }
 
+
+  // ← this will run *after* the prop is updated
+  @Watch('hospitalId')
+  async hospitalChanged(newId: string) {
+    console.log('x-hospital-list: hospitalId changed → reloading', {newId});
+    console.log('📋 List reloading for hospital', newId);
+    this.employees = await this.getEmployeeAsync();
+  }
+
   async componentDidLoad() {
-    console.log('x-hospital-list: componentDidLoad', { employeesCount: this.employees?.length });
+    console.log('x-hospital-list: componentDidLoad', {employeesCount: this.employees?.length});
   }
 
   async componentDidUpdate() {
-    console.log('x-hospital-list: componentDidUpdate', { employeesCount: this.employees?.length });
+    console.log('x-hospital-list: componentDidUpdate', {employeesCount: this.employees?.length});
   }
 
   private async getEmployeeAsync(): Promise<EmployeeListEntry[]> {
-    console.log('x-hospital-list: getEmployeeAsync - starting API request', { apiBase: this.apiBase, hospitalId: this.hospitalId });
+    console.log('x-hospital-list: getEmployeeAsync - starting API request', {
+      apiBase: this.apiBase,
+      hospitalId: this.hospitalId
+    });
     try {
       const configuration = new Configuration({
         basePath: this.apiBase,
@@ -38,20 +52,26 @@ export class XHospitalList {
       const employeeListApi = new HospitalEmployeeListApi(configuration);
       console.log('x-hospital-list: getEmployeeAsync - sending request');
       const response = await employeeListApi.getEmployeeListEntriesRaw({hospitalId: this.hospitalId})
-      console.log('x-hospital-list: getEmployeeAsync - received response', { status: response.raw.status, statusText: response.raw.statusText });
+      console.log('x-hospital-list: getEmployeeAsync - received response', {
+        status: response.raw.status,
+        statusText: response.raw.statusText
+      });
 
       if (response.raw.status < 299) {
         const data = await response.value();
-        console.log('x-hospital-list: getEmployeeAsync - parsed response data', { count: data.length });
+        console.log('x-hospital-list: getEmployeeAsync - parsed response data', {count: data.length});
         this.employees = data;
         return data;
       } else {
         this.errorMessage = `Cannot retrieve list of employees: ${response.raw.statusText}`;
-        console.error('x-hospital-list: getEmployeeAsync - error response', { status: response.raw.status, statusText: response.raw.statusText });
+        console.error('x-hospital-list: getEmployeeAsync - error response', {
+          status: response.raw.status,
+          statusText: response.raw.statusText
+        });
       }
     } catch (err: any) {
       this.errorMessage = `Cannot retrieve list of employees: ${err.message || "unknown"}`;
-      console.error('x-hospital-list: getEmployeeAsync - exception', { message: err.message, error: err });
+      console.error('x-hospital-list: getEmployeeAsync - exception', {message: err.message, error: err});
     }
     this.employees = [];
     return [];
@@ -68,13 +88,18 @@ export class XHospitalList {
   }
 
   private handleEmployeeClick = (employeeId: string) => {
-    console.log('x-hospital-list: Employee item clicked', { employeeId });
+    console.log('x-hospital-list: Employee item clicked', {employeeId});
     try {
       this.entryClicked.emit(employeeId);
-      console.log('x-hospital-list: entryClicked event emitted with employeeId', { employeeId });
+      console.log('x-hospital-list: entryClicked event emitted with employeeId', {employeeId});
     } catch (err) {
       console.error('x-hospital-list: Error emitting entryClicked event', err);
     }
+  }
+
+  @Method()
+  async reload() {
+    this.employees = await this.getEmployeeAsync();
   }
 
   render() {
@@ -100,8 +125,14 @@ export class XHospitalList {
             <md-list>
               {this.employees && this.employees.map((employee) =>
                 <md-list-item onClick={() => this.handleEmployeeClick(employee.id)}>
+
                   <div slot="headline">{employee.name}</div>
                   <md-icon slot="start">person</md-icon>
+                  { employee.role &&
+                       <div slot="supporting-text">{employee.role.value}</div>
+                     }
+                  {/*<div slot="supporting-text">{employee.role.value}</div>*/}
+
                 </md-list-item>
               )}
             </md-list>

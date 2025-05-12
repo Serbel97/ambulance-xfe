@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Employee List Api
- * Hospital Employee List management for Web-In-Cloud system
+ * Hospital Employee Administration for Web-In-Cloud system
  *
  * The version of the OpenAPI document: 1.0.0
  * Contact: xbelake@stuba.sk
@@ -126,7 +126,7 @@ export interface HospitalEmployeeListApiInterface {
      * @summary Updates specific entry
      * @param {string} hospitalId pass the id of the particular hospital
      * @param {string} entryId pass the id of the particular entry in the employee list
-     * @param {EmployeeListEntry} employeeListEntry Employee list entry to update
+     * @param {EmployeeListEntry} employeeListEntry Waiting list entry to update
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof HospitalEmployeeListApiInterface

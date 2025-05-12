@@ -19,19 +19,11 @@ form{
   text-align: center;
 }
 
-.duration-slider {
-  display: flex;
-  flex-direction: row;
-  align-content: space-around;
-  align-items: center;
-}
-
 .actions {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   gap: 1rem;
-
 }
 
 .stretch-fill {

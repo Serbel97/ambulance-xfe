@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Employee List Api
- * Hospital Employee List management for Web-In-Cloud system
+ * Hospital Employee Administration for Web-In-Cloud system
  *
  * The version of the OpenAPI document: 1.0.0
  * Contact: xbelake@stuba.sk
@@ -14,7 +14,7 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * Describes disease, symptoms, or other reasons of employee  visit
+ * Describes employee position in hospital
  * @export
  * @interface Role
  */

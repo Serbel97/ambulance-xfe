@@ -1,4 +1,4 @@
-import {Component, Host, Prop, State, h} from '@stencil/core';
+import {Component, Host, Prop, State, h, Element, Listen} from '@stencil/core';
 
 declare global {
   interface Window {
@@ -13,11 +13,44 @@ declare global {
 })
 
 export class XHospitalApp {
+  @State() currentView: 'employees' | 'clinic' = 'employees';
+
   @State() private isModalOpen = false;
   @State() private modalEntryId = "@new";
   @Prop() basePath: string = "";
   @Prop() apiBase: string;
-  @Prop() hospitalId: string;
+  // @Prop() hospitalId: string;
+  @Prop({mutable: true}) hospitalId: string;
+  @Element() host!: HTMLElement;
+
+  /** Tab buttons in the navbar will emit this */
+  // @Listen('view-changed', { target: 'window' })
+  // handleViewChanged(ev: CustomEvent<'employees'|'clinics'>) {
+  //   this.currentView = ev.detail;
+  // }
+
+  @Listen('view-changed', {target: 'window'})
+  async handleViewChanged(ev: CustomEvent<'employees' | 'clinic'>) {
+    this.currentView = ev.detail;
+
+    // If they clicked Employees, reload the list component:
+    if (ev.detail === 'employees') {
+      const list = this.host.shadowRoot!
+        .querySelector('x-hospital-list') as any;
+      if (list && typeof list.reload === 'function') {
+        await list.reload();
+      }
+    }
+  }
+
+  @Listen('hospital-changed', { target: 'window' })
+  async handleHospitalChanged(ev: CustomEvent<string>) {
+    console.log('App caught hospital-changed →', ev.detail);
+    this.hospitalId = ev.detail;
+    // either rely on @Watch in your list, or…
+    // const list = this.host.shadowRoot!.querySelector('x-hospital-list') as any;
+    // if (list?.reload) await list.reload();
+  }
 
   componentWillLoad() {
     console.log('x-hospital-app: componentWillLoad', {
@@ -65,7 +98,7 @@ export class XHospitalApp {
       }
     };
 
-    const handleEditorClosed = (ev: CustomEvent<string>) => {
+    const handleEditorClosed = async (ev: CustomEvent<string>) => {
       console.log('x-hospital-app: handleEditorClosed event received', {
         detail: ev.detail,
         currentModalState: this.isModalOpen
@@ -75,6 +108,11 @@ export class XHospitalApp {
         // Close the modal
         this.isModalOpen = false;
         console.log('x-hospital-app: Modal closed');
+        const list = this.host.shadowRoot!.querySelector('x-hospital-list') as any;
+        if (list && typeof list.reload === 'function') {
+          await list.reload();
+        }
+        console.log('x-hospital-app: Reloaded list after closing editor');
       } catch (err) {
         console.error('x-hospital-app: Error handling editor closed event', err);
       }
@@ -82,15 +120,35 @@ export class XHospitalApp {
 
     return (
       <Host>
-        <x-hospital-list hospital-id={this.hospitalId} api-base={this.apiBase} onentry-clicked={handleEntryClicked}>
-        </x-hospital-list>
+
+        {/*<x-hospital-navbar apiBase={this.apiBase} hospitalId={this.hospitalId} />*/}
+        <x-hospital-navbar
+          apiBase={this.apiBase}
+          hospitalId={this.hospitalId}
+          basePath={this.basePath}
+        />
+
+        {this.currentView === 'employees' &&
+          <x-hospital-list
+            hospitalId={this.hospitalId}
+            apiBase={this.apiBase}
+            onentry-clicked={handleEntryClicked}
+          />
+        }
+
+        {this.currentView === 'clinic' &&
+          <div class="clinics-placeholdero">
+            {/* TODO: replace with real clinic component */}
+            <p>No clinic view implemented yet.</p>
+          </div>
+        }
 
         {this.isModalOpen && (
           <div class="modal-overlay" onClick={() => this.isModalOpen = false}>
             <div class="modal-container" onClick={(e) => e.stopPropagation()}>
               <x-hospital-editor entry-id={this.modalEntryId}
-                hospital-id={this.hospitalId} api-base={this.apiBase}
-                oneditor-closed={handleEditorClosed}>
+                                 hospitalId={this.hospitalId} apiBase={this.apiBase}
+                                 oneditor-closed={handleEditorClosed}>
               </x-hospital-editor>
             </div>
           </div>

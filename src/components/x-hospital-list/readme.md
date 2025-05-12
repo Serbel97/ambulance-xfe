@@ -20,6 +20,19 @@
 | `entry-clicked` |             | `CustomEvent<string>` |
 
 
+## Methods
+
+### `reload() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ## Dependencies
 
 ### Used by

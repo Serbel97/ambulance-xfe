@@ -1,8 +1,10 @@
 apis/HospitalEmployeeListApi.ts
 apis/HospitalRolesApi.ts
+apis/HospitalsApi.ts
 apis/index.ts
 index.ts
 models/EmployeeListEntry.ts
+models/Hospital.ts
 models/Role.ts
 models/index.ts
 runtime.ts

@@ -19,6 +19,12 @@ export namespace Components {
     interface XHospitalList {
         "apiBase": string;
         "hospitalId": string;
+        "reload": () => Promise<void>;
+    }
+    interface XHospitalNavbar {
+        "apiBase": string;
+        "basePath": string;
+        "hospitalId": string;
     }
 }
 export interface XHospitalEditorCustomEvent<T> extends CustomEvent<T> {
@@ -70,10 +76,17 @@ declare global {
         prototype: HTMLXHospitalListElement;
         new (): HTMLXHospitalListElement;
     };
+    interface HTMLXHospitalNavbarElement extends Components.XHospitalNavbar, HTMLStencilElement {
+    }
+    var HTMLXHospitalNavbarElement: {
+        prototype: HTMLXHospitalNavbarElement;
+        new (): HTMLXHospitalNavbarElement;
+    };
     interface HTMLElementTagNameMap {
         "x-hospital-app": HTMLXHospitalAppElement;
         "x-hospital-editor": HTMLXHospitalEditorElement;
         "x-hospital-list": HTMLXHospitalListElement;
+        "x-hospital-navbar": HTMLXHospitalNavbarElement;
     }
 }
 declare namespace LocalJSX {
@@ -90,13 +103,19 @@ declare namespace LocalJSX {
     }
     interface XHospitalList {
         "apiBase"?: string;
-        "hospitalId"?: string;
+        "hospitalId": string;
         "onEntry-clicked"?: (event: XHospitalListCustomEvent<string>) => void;
+    }
+    interface XHospitalNavbar {
+        "apiBase": string;
+        "basePath"?: string;
+        "hospitalId": string;
     }
     interface IntrinsicElements {
         "x-hospital-app": XHospitalApp;
         "x-hospital-editor": XHospitalEditor;
         "x-hospital-list": XHospitalList;
+        "x-hospital-navbar": XHospitalNavbar;
     }
 }
 export { LocalJSX as JSX };
@@ -106,6 +125,7 @@ declare module "@stencil/core" {
             "x-hospital-app": LocalJSX.XHospitalApp & JSXBase.HTMLAttributes<HTMLXHospitalAppElement>;
             "x-hospital-editor": LocalJSX.XHospitalEditor & JSXBase.HTMLAttributes<HTMLXHospitalEditorElement>;
             "x-hospital-list": LocalJSX.XHospitalList & JSXBase.HTMLAttributes<HTMLXHospitalListElement>;
+            "x-hospital-navbar": LocalJSX.XHospitalNavbar & JSXBase.HTMLAttributes<HTMLXHospitalNavbarElement>;
         }
     }
 }

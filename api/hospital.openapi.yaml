@@ -3,7 +3,7 @@ servers:
   - description: Cluster Endpoint
     url: /api
 info:
-  description: Hospital Employee List management for Web-In-Cloud system
+  description: Hospital Employee Administration for Web-In-Cloud system
   version: "1.0.0"
   title: Employee List Api
   contact:
@@ -16,6 +16,8 @@ tags:
     description: Hospital Employee List API
   - name: hospitalRoles
     description: Employee role in the hospital
+  - name: hospitals
+    description: Hospital details
 paths:
   "/employee-list/{hospitalId}/entries":
     post:
@@ -143,7 +145,7 @@ paths:
             examples:
               request:
                 $ref: "#/components/examples/EmployeeListEntryExample"
-        description: Employee list entry to update
+        description: Waiting list entry to update
         required: true
       responses:
         "200":
@@ -211,6 +213,76 @@ paths:
                   $ref: "#/components/examples/RolesListExample"
         "404":
           description: Hospital with such ID does not exists
+  "/hospital":
+    get:
+      tags:
+        - hospitals
+      summary: Provides the hospital list
+      operationId: getHospital
+      responses:
+        "200":
+          description: hospital list entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hospital"
+              examples:
+                response:
+                  $ref: "#/components/examples/HospitalListEntriesExample"
+        "404":
+          description: Hospital with such ID does not exist
+    post:
+      tags:
+        - hospitals
+      summary: Saves new hospital definition
+      operationId: createHospital
+      description: Use this method to initialize new hospital in the system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hospital"
+            examples:
+              request-sample:
+                $ref: "#/components/examples/HospitalExample"
+        description: Hospital details to store
+        required: true
+      responses:
+        "200":
+          description: >-
+            Value of stored hospital
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hospital"
+              examples:
+                updated-response:
+                  $ref: "#/components/examples/HospitalExample"
+        "400":
+          description: Missing mandatory properties of input object.
+        "409":
+          description: Entry with the specified id already exists
+  "/hospital/{hospitalId}":
+    delete:
+      tags:
+        - hospitals
+      summary: Deletes specific hospital
+      operationId: deleteHospital
+      description: Use this method to delete the specific hospital from the system.
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Item deleted
+        "404":
+          description: Hospital with such ID does not exist
 components:
   schemas:
     EmployeeListEntry:
@@ -230,7 +302,7 @@ components:
       example:
         $ref: "#/components/examples/EmployeeListEntryExample"
     Role:
-      description: "Describes disease, symptoms, or other reasons of employee  visit"
+      description: "Describes employee position in hospital"
       required:
         - value
       properties:
@@ -242,10 +314,36 @@ components:
           example: subfebrilia
       example:
         $ref: "#/components/examples/RoleExample"
+    Hospital:
+      type: object
+      required: [ "id", "name" ]
+      properties:
+        id:
+          type: string
+          example: nemocnica-ba
+          description: Unique identifier of the hospital
+        name:
+          type: string
+          example: Dentist hospital
+          description: Human readable display name of the hospital
+        # roomNumber:
+        address:
+          type: string
+          example: Ulica u nas doma 69
+        employeeList:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeListEntry'
+        predefinedRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+      example:
+        $ref: "#/components/examples/HospitalExample"
   examples:
     RolesListExample:
-      summary: Sample of hospital roles
-      description: Example list of possible roles, symptoms, and visit reasons
+      summary: Sample of GP hospital roles
+      description: Example list of possible
       value:
         - value: Doctor
           code: subfebrilia
@@ -264,17 +362,17 @@ components:
         id: x321ab3
         name: Ľudomír Zlostný
         role:
-          value: Nevoľnosť
+          value: Nurse
           code: nausea
     RoleExample:
-      summary: Roles and symptoms
-      description: list of few symptoms that can be chosen by employees
+      summary: Roles
+      description: list of few roles that can be chosen to employee
       value:
         valuee: Doctor
         code: subfebrilia
     EmployeeListEntriesExample:
-      summary: List of employee employees
-      description: Example employee list containing 2 employees
+      summary: List of employees
+      description: Example employee list containing 2 employee
       value:
         - id: x321ab3
           name: Jožko Púčik
@@ -286,3 +384,40 @@ components:
           role:
             value: Nurse
             code: nausea
+    HospitalListEntriesExample:
+      summary: List of hospitals
+      description: Example hospital list containing 2 hospitals
+      value:
+        - id: x321ab3
+          name: Hopistal BA
+        - id: x321ab4
+          name: Hospital NR
+    HospitalExample:
+      summary: Sample hospital
+      description: Example of hospital with employee list and roles
+      value:
+        id: hospital-ha
+        name: Hospital in BA
+        address: Ulica u nas doma69
+        employeeList:
+          - id: x321ab3
+            name: Jožko Púčik
+            role:
+              value: Doctor
+              code: subfebrilia
+          - id: x321ab4
+            name: Ferdinand Trety
+            condition:
+              value: Nurse
+              code: nausea
+        predefinedRoles:
+          - value: Doctor
+            code: subfebrilia
+          - value: Nurse
+            code: nausea
+          - value: Director
+            code: followup
+          - value: Administration
+            code: administration
+          - value: Economist
+            code: blood-test

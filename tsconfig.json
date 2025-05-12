@@ -9,7 +9,8 @@
       "es2022"
     ],
     "skipLibCheck": true,
-    "moduleResolution": "node16",
+//    "moduleResolution": "node16", // TODO: olf fix
+    "moduleResolution": "bundler",
     "module": "esnext",
     "target": "es2022",
     "noUnusedLocals": false,

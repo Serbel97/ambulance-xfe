@@ -3,37 +3,25 @@ import {XHospitalApp} from '../x-hospital-app';
 
 describe('x-hospital-app', () => {
 
-  it('renders editor in modal when URL has entry/@new', async () => {
+  it('always renders navbar as first child', async () => {
     const page = await newSpecPage({
-      url: `http://localhost/entry/@new`,
-      components: [XHospitalApp],
-      html: `<x-hospital-app base-path="/"></x-hospital-app>`,
+      url:        'http://localhost/',
+      components: [ XHospitalApp ],
+      html:       `<x-hospital-app base-path="/" api-base="http://localhost/api" hospital-id="hospital-ba"></x-hospital-app>`
     });
-    page.win.navigation = new EventTarget()
 
-    // Simulate clicking on the "Add" button to open the modal
-    const app = page.rootInstance;
-    app.isModalOpen = true;
-    app.modalEntryId = "@new";
-    await page.waitForChanges();
+        const first = page.root.shadowRoot!.firstElementChild!;
+        expect(first.tagName.toLowerCase()).toBe('x-hospital-navbar');  });
 
-    // Check if the modal contains the editor
-    const modalContainer = page.root.shadowRoot.querySelector('.modal-container');
-    expect(modalContainer).not.toBeNull();
+  it('always renders list as second child', async () => {
+    const page = await newSpecPage({
+      url:        'http://localhost/hospital/',
+      components: [ XHospitalApp ],
+      html:       `<x-hospital-app base-path="/hospital/" api-base="http://localhost/api" hospital-id="hospital-ba"></x-hospital-app>`
+    });
 
-    const editor = modalContainer.querySelector('x-hospital-editor');
-    expect(editor).not.toBeNull();
-    expect(editor.getAttribute('entry-id')).toEqual('@new');
+        const second = page.root.shadowRoot!.children[1];
+        expect(second.tagName.toLowerCase()).toBe('x-hospital-list');
   });
 
-  it('renders list', async () => {
-    const page = await newSpecPage({
-      url: `http://localhost/hospital/`,
-      components: [XHospitalApp],
-      html: `<x-hospital-app base-path="/hospital/"></x-hospital-app>`,
-    });
-    page.win.navigation = new EventTarget()
-    const child = await page.root.shadowRoot.firstElementChild;
-    expect(child.tagName.toLocaleLowerCase()).toEqual("x-hospital-list");
-  });
 });
