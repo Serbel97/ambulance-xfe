@@ -6,5 +6,6 @@ index.ts
 models/EmployeeListEntry.ts
 models/Hospital.ts
 models/Role.ts
+models/TransferEmployeeListEntryRequest.ts
 models/index.ts
 runtime.ts

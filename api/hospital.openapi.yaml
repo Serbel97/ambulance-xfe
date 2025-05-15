@@ -19,6 +19,56 @@ tags:
   - name: hospitals
     description: Hospital details
 paths:
+  /employee-list/{hospitalId}/entries/{entryId}/transfer:
+    post:
+      tags:
+        - hospitalEmployeeList
+      summary: Transfer an employee entry to another hospital
+      operationId: transferEmployeeListEntry
+      description: Moves the given entry from the source hospital to the one specified in the request body.
+      parameters:
+        - in: path
+          name: hospitalId
+          required: true
+          schema:
+            type: string
+          description: The ID of the source hospital
+        - in: path
+          name: entryId
+          required: true
+          schema:
+            type: string
+          description: The ID of the employee entry to move
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - targetHospitalId
+              properties:
+                targetHospitalId:
+                  type: string
+                  description: The hospital to move this entry into
+              example:
+                targetHospitalId: hospital-nr
+      responses:
+        "200":
+          description: value of the employee list entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmployeeListEntry"
+              examples:
+                response:
+                  $ref: "#/components/examples/EmployeeListEntriesExample"
+        "400":
+          description: Missing or invalid targetHospitalId
+        "404":
+          description: Source hospital or entry not found
   "/employee-list/{hospitalId}/entries":
     post:
       tags:

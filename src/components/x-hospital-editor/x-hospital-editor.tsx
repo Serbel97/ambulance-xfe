@@ -2,6 +2,8 @@ import {Component, Event, EventEmitter, h, Host, Prop, State} from '@stencil/cor
 import {
   HospitalRolesApi,
   HospitalEmployeeListApi,
+  HospitalsApi,
+  Hospital,
   Role,
   Configuration,
   EmployeeListEntry
@@ -21,9 +23,12 @@ export class XHospitalEditor {
 
   @State() entry: EmployeeListEntry;
   @State() roles: Role[];
+  @State() hospitals: Hospital[];
+  @State() view: 'edit' | 'transfer' = 'edit';
+  @State() targetHospitalId: string;
   @State() errorMessage: string;
   @State() isValid: boolean;
-  @State() dataLoading: boolean = true; // New state for loading
+  @State() dataLoading: boolean = true;
 
   private formElement: HTMLFormElement;
 
@@ -36,6 +41,8 @@ export class XHospitalEditor {
 
     await this.getEmployeeEntryAsync();
     await this.getRoles();
+    await this.getHospitals();
+    this.targetHospitalId = this.hospitalId;
     this.dataLoading = false;
 
     console.log('x-hospital-editor: componentWillLoad completed', {
@@ -43,6 +50,38 @@ export class XHospitalEditor {
       rolesLoaded: this.roles?.length,
       isValid: this.isValid
     });
+  }
+
+  private async getHospitals() {
+    try {
+      const cfg = new Configuration({basePath: this.apiBase});
+      const hospApi = new HospitalsApi(cfg);
+      const resp = await hospApi.getHospitalRaw();
+      this.hospitals = await resp.value();
+    } catch (err) {
+      console.error('Failed to load hospitals', err);
+      this.hospitals = [];
+    }
+  }
+
+  private async transferEntry() {
+    try {
+      const cfg = new Configuration({basePath: this.apiBase});
+      const empApi = new HospitalEmployeeListApi(cfg);
+      const body = {targetHospitalId: this.targetHospitalId};
+      const resp = await empApi.transferEmployeeListEntryRaw({
+        hospitalId: this.hospitalId,
+        entryId: this.entryId,
+        transferEmployeeListEntryRequest: body
+      });
+      if (resp.raw.status < 299) {
+        this.editorClosed.emit('transfer');
+      } else {
+        this.errorMessage = `Transfer failed: ${resp.raw.statusText}`;
+      }
+    } catch (err: any) {
+      this.errorMessage = `Transfer error: ${err.message}`;
+    }
   }
 
   componentDidLoad() {
@@ -62,7 +101,7 @@ export class XHospitalEditor {
   }
 
   private async getEmployeeEntryAsync(): Promise<EmployeeListEntry> {
-    console.log('x-hospital-editor: getEmployeeEntryAsync - starting', { entryId: this.entryId });
+    console.log('x-hospital-editor: getEmployeeEntryAsync - starting', {entryId: this.entryId});
 
     if (this.entryId === "@new") {
       console.log('x-hospital-editor: getEmployeeEntryAsync - creating new entry');
@@ -186,121 +225,121 @@ export class XHospitalEditor {
     });
 
     if (this.errorMessage) {
-      console.log('x-hospital-editor: render - showing error message', { errorMessage: this.errorMessage });
+      console.log('x-hospital-editor: render - showing error message', {errorMessage: this.errorMessage});
       return (
         <Host>
           <div class="error">{this.errorMessage}</div>
         </Host>
       )
     }
-
+    if (this.dataLoading) {
+      return (<Host>
+        <div class="loading">Loading...</div>
+      </Host>);
+    }
     return (
       <Host>
-        {this.dataLoading ? (
-          <div class="loading">Loading data...</div>
-        ) : (
-          <div>
-            {/* Render the form fields */}
-            <form ref={el => this.formElement = el}>
-              <md-filled-text-field label="Name & Surname"
-                                    required value={this.entry?.name}
-                                    oninput={(ev: InputEvent) => {
-                                      console.log('x-hospital-editor: name field input event');
-                                      if (this.entry) {
-                                        this.entry.name = this.handleInputEvent(ev);
-                                        console.log('x-hospital-editor: name updated', {
-                                          newName: this.entry.name,
-                                          isValid: this.isValid
-                                        });
-                                      }
-                                    }}>
-                <md-icon slot="leading-icon">person</md-icon>
-              </md-filled-text-field>
-
-              {/*<md-filled-text-field label="Registračné číslo pacienta"*/}
-              {/*                      required value={this.entry?.patientId}*/}
-              {/*                      oninput={(ev: InputEvent) => {*/}
-              {/*                        if (this.entry) {*/}
-              {/*                          this.entry.patientId = this.handleInputEvent(ev)*/}
-              {/*                        }*/}
-              {/*                      }}>*/}
-
-              {/*  <md-icon slot="leading-icon">fingerprint</md-icon>*/}
-              {/*</md-filled-text-field>*/}
-
-              {/*<md-filled-text-field disabled label="Čakáte od"*/}
-              {/*                      value={new Date(this.entry?.employeeSince || Date.now()).toLocaleTimeString()}>*/}
-              {/*  <md-icon slot="leading-icon">watch_later</md-icon>*/}
-              {/*</md-filled-text-field>*/}
-              {/*<md-filled-text-field disabled*/}
-              {/*                      value={new Date(this.entry?.estimatedStart || Date.now()).toLocaleTimeString()}>*/}
-              {/*  label="Predpokladaný čas vyšetrenia"*/}
-              {/*  <md-icon slot="leading-icon">login</md-icon>*/}
-              {/*</md-filled-text-field>*/}
-
-              {this.renderRoles()}
-
-            </form>
-
-            {/*<div class="duration-slider">*/}
-            {/*  <span class="label">Predpokladaná doba trvania:&nbsp; </span>*/}
-            {/*  <span class="label">{this.duration}</span>*/}
-            {/*  <span class="label">&nbsp;minút</span>*/}
-            {/*  <md-slider*/}
-            {/*    min="2" max="45" value={this.entry?.estimatedDurationMinutes || 15} ticks labeled*/}
-            {/*    oninput={(ev: InputEvent) => {*/}
-            {/*      if (this.entry) {*/}
-            {/*        this.entry.estimatedDurationMinutes*/}
-            {/*          = Number.parseInt(this.handleInputEvent(ev))*/}
-            {/*      }*/}
-            {/*      ;*/}
-            {/*      this.handleSliderInput(ev)*/}
-            {/*    }}></md-slider>*/}
-            {/*</div>*/}
-
-            <md-divider></md-divider>
-            <div class="actions">
-              <md-filled-tonal-button id="delete" disabled={!this.entry || this.entry?.id === "@new"}
-                                      onClick={() => {
-                                        console.log('x-hospital-editor: Delete button clicked', {
-                                          entryId: this.entryId,
-                                          isDisabled: !this.entry || this.entry?.id === "@new"
-                                        });
-                                        this.deleteEntry();
-                                      }}>
-                <md-icon slot="icon">delete</md-icon>
-                Zmazať
-              </md-filled-tonal-button>
-              <span class="stretch-fill"></span>
-              <md-outlined-button id="cancel" onClick={() => {
-                console.log('x-hospital-editor: Cancel button clicked');
-                try {
-                  this.editorClosed.emit("cancel");
-                  console.log('x-hospital-editor: editorClosed event emitted with "cancel"');
-                } catch (err) {
-                  console.error('x-hospital-editor: Error emitting editorClosed event', err);
-                }
-              }}>
-                Zrušiť
-              </md-outlined-button>
-              <md-filled-button id="confirm" disabled={!this.isValid} onClick={() => {
-                console.log('x-hospital-editor: Save button clicked', {
-                  isValid: this.isValid,
-                  isDisabled: !this.isValid
-                });
-                this.updateEntry();
-              }}>
-                <md-icon slot="icon">save</md-icon>
-                Uložiť
-              </md-filled-button>
-            </div>
-
-            {this.errorMessage && (
-              <div class="error">{this.errorMessage}</div>
-            )}
-          </div>
-        )}
+        {/* menu buttons */}
+        <div class="editor-menu">
+          <button class={this.view === 'edit' ? 'active' : ''} onClick={() => this.view = 'edit'}>User data</button>
+          <button class={this.view === 'transfer' ? 'active' : ''} onClick={() => this.view = 'transfer'}>Transfer
+          </button>
+        </div>
+        {this.view === 'edit' ? this.renderEdit() : this.renderTransfer()}
       </Host>
+    );
+  }
+
+  private renderEdit() {
+    return (
+      <div>
+        {/* Render the form fields */}
+        <form ref={el => this.formElement = el}>
+          <md-filled-text-field label="Name & Surname"
+                                required="" value={this.entry?.name}
+                                oninput={(ev: InputEvent) => {
+                                  console.log('x-hospital-editor: name field input event');
+                                  if (this.entry) {
+                                    this.entry.name = this.handleInputEvent(ev);
+                                    console.log('x-hospital-editor: name updated', {
+                                      newName: this.entry.name,
+                                      isValid: this.isValid
+                                    });
+                                  }
+                                }}>
+            <md-icon slot="leading-icon">person</md-icon>
+          </md-filled-text-field>
+          {this.renderRoles()}
+        </form>
+        <md-divider></md-divider>
+        <div class="actions">
+          <md-filled-tonal-button id="delete" disabled={!this.entry || this.entry?.id === "@new"}
+                                  onClick={() => {
+                                    console.log('x-hospital-editor: Delete button clicked', {
+                                      entryId: this.entryId,
+                                      isDisabled: !this.entry || this.entry?.id === "@new"
+                                    });
+                                    this.deleteEntry();
+                                  }}>
+            <md-icon slot="icon">delete</md-icon>
+            Zmazať
+          </md-filled-tonal-button>
+          <span class="stretch-fill"></span>
+          <md-outlined-button id="cancel" onClick={() => {
+            console.log('x-hospital-editor: Cancel button clicked');
+            try {
+              this.editorClosed.emit("cancel");
+              console.log('x-hospital-editor: editorClosed event emitted with "cancel"');
+            } catch (err) {
+              console.error('x-hospital-editor: Error emitting editorClosed event', err);
+            }
+          }}>
+            Zrušiť
+          </md-outlined-button>
+          <md-filled-button id="confirm" disabled={!this.isValid} onClick={() => {
+            console.log('x-hospital-editor: Save button clicked', {
+              isValid: this.isValid,
+              isDisabled: !this.isValid
+            });
+            this.updateEntry();
+          }}>
+            <md-icon slot="icon">save</md-icon>
+            Uložiť
+          </md-filled-button>
+        </div>
+
+        {this.errorMessage && (
+          <div class="error">{this.errorMessage}</div>
+        )}
+      </div>
+
+    )
+  }
+
+  private renderTransfer() {
+    return (
+      <div class="transfer-view">
+        <form>
+          {this.hospitals.map(x => (
+            <label>
+              <input type="radio"
+                     name="targetHospital"
+                     value={x.id}
+                     checked={x.id === this.targetHospitalId}
+                     onInput={(ev: any) => this.targetHospitalId = ev.target.value}/>
+              {x.name}
+            </label>
+          ))}
+        </form>
+        <div class="actions">
+          <button onClick={() => {
+            this.editorClosed.emit('cancel');
+          }}>Cancel
+          </button>
+          <button onClick={() => this.transferEntry()}>Submit</button>
+        </div>
+        {this.errorMessage && <div class="error">{this.errorMessage}</div>}
+      </div>
     );
   }
 
@@ -335,13 +374,6 @@ export class XHospitalEditor {
                         display-text={this.entry?.role?.value}
                         oninput={(ev: InputEvent) => this.handleRole(ev)}>
         <md-icon slot="leading-icon">sick</md-icon>
-        {/*{this.entry?.role?.reference ?*/}
-        {/*  <md-icon slot="trailing-icon" class="link"*/}
-        {/*           onclick={() => window.open(this.entry.role.reference, "_blank")}>*/}
-        {/*    open_in_new*/}
-        {/*  </md-icon>*/}
-        {/*  : undefined*/}
-        {/*}*/}
         {roles.map(role => {
           console.log('x-hospital-editor: renderRoles - rendering role option', {
             code: role.code,
@@ -365,7 +397,7 @@ export class XHospitalEditor {
     console.log('x-hospital-editor: handleRole - role selection changed');
     if (this.entry) {
       const code = this.handleInputEvent(ev);
-      console.log('x-hospital-editor: handleRole - looking for role with code', { code });
+      console.log('x-hospital-editor: handleRole - looking for role with code', {code});
       const role = this.roles.find(role => role.code === code);
       if (role) {
         this.entry.role = Object.assign({}, role);
@@ -374,7 +406,7 @@ export class XHospitalEditor {
           value: role.value
         });
       } else {
-        console.warn('x-hospital-editor: handleRole - role not found for code', { code });
+        console.warn('x-hospital-editor: handleRole - role not found for code', {code});
       }
     } else {
       console.warn('x-hospital-editor: handleRole - entry is null or undefined');

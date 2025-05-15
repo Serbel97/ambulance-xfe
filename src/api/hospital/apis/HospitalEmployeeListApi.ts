@@ -16,10 +16,13 @@
 import * as runtime from '../runtime';
 import type {
   EmployeeListEntry,
+  TransferEmployeeListEntryRequest,
 } from '../models';
 import {
     EmployeeListEntryFromJSON,
     EmployeeListEntryToJSON,
+    TransferEmployeeListEntryRequestFromJSON,
+    TransferEmployeeListEntryRequestToJSON,
 } from '../models';
 
 export interface CreateEmployeeListEntryRequest {
@@ -39,6 +42,12 @@ export interface GetEmployeeListEntriesRequest {
 export interface GetEmployeeListEntryRequest {
     hospitalId: string;
     entryId: string;
+}
+
+export interface TransferEmployeeListEntryOperationRequest {
+    hospitalId: string;
+    entryId: string;
+    transferEmployeeListEntryRequest: TransferEmployeeListEntryRequest;
 }
 
 export interface UpdateEmployeeListEntryRequest {
@@ -120,6 +129,24 @@ export interface HospitalEmployeeListApiInterface {
      * Provides details about employee list entry
      */
     getEmployeeListEntry(requestParameters: GetEmployeeListEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EmployeeListEntry>;
+
+    /**
+     * Moves the given entry from the source hospital to the one specified in the request body.
+     * @summary Transfer an employee entry to another hospital
+     * @param {string} hospitalId The ID of the source hospital
+     * @param {string} entryId The ID of the employee entry to move
+     * @param {TransferEmployeeListEntryRequest} transferEmployeeListEntryRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HospitalEmployeeListApiInterface
+     */
+    transferEmployeeListEntryRaw(requestParameters: TransferEmployeeListEntryOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<EmployeeListEntry>>>;
+
+    /**
+     * Moves the given entry from the source hospital to the one specified in the request body.
+     * Transfer an employee entry to another hospital
+     */
+    transferEmployeeListEntry(requestParameters: TransferEmployeeListEntryOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<EmployeeListEntry>>;
 
     /**
      * Use this method to update content of the employee list entry.
@@ -285,6 +312,49 @@ export class HospitalEmployeeListApi extends runtime.BaseAPI implements Hospital
      */
     async getEmployeeListEntry(requestParameters: GetEmployeeListEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EmployeeListEntry> {
         const response = await this.getEmployeeListEntryRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Moves the given entry from the source hospital to the one specified in the request body.
+     * Transfer an employee entry to another hospital
+     */
+    async transferEmployeeListEntryRaw(requestParameters: TransferEmployeeListEntryOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<EmployeeListEntry>>> {
+        if (requestParameters.hospitalId === null || requestParameters.hospitalId === undefined) {
+            throw new runtime.RequiredError('hospitalId','Required parameter requestParameters.hospitalId was null or undefined when calling transferEmployeeListEntry.');
+        }
+
+        if (requestParameters.entryId === null || requestParameters.entryId === undefined) {
+            throw new runtime.RequiredError('entryId','Required parameter requestParameters.entryId was null or undefined when calling transferEmployeeListEntry.');
+        }
+
+        if (requestParameters.transferEmployeeListEntryRequest === null || requestParameters.transferEmployeeListEntryRequest === undefined) {
+            throw new runtime.RequiredError('transferEmployeeListEntryRequest','Required parameter requestParameters.transferEmployeeListEntryRequest was null or undefined when calling transferEmployeeListEntry.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/employee-list/{hospitalId}/entries/{entryId}/transfer`.replace(`{${"hospitalId"}}`, encodeURIComponent(String(requestParameters.hospitalId))).replace(`{${"entryId"}}`, encodeURIComponent(String(requestParameters.entryId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TransferEmployeeListEntryRequestToJSON(requestParameters.transferEmployeeListEntryRequest),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EmployeeListEntryFromJSON));
+    }
+
+    /**
+     * Moves the given entry from the source hospital to the one specified in the request body.
+     * Transfer an employee entry to another hospital
+     */
+    async transferEmployeeListEntry(requestParameters: TransferEmployeeListEntryOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<EmployeeListEntry>> {
+        const response = await this.transferEmployeeListEntryRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

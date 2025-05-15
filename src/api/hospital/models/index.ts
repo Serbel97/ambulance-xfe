@@ -3,3 +3,4 @@
 export * from './EmployeeListEntry';
 export * from './Hospital';
 export * from './Role';
+export * from './TransferEmployeeListEntryRequest';
