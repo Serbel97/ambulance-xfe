@@ -33,3 +33,91 @@ form{
 md-divider {
   margin-bottom: var(--_wl-editor_gap);
 }
+
+/* Editor menu buttons */
+.editor-menu {
+  display: flex;
+  gap: 1rem;
+  padding: var(--_wl-editor_gap) 0;
+}
+
+.editor-menu button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: background 0.3s, border-bottom 0.3s, color 0.3s;
+}
+
+.editor-menu button:hover {
+  background-color: var(--md-sys-color-surface-variant, #e7e0ec);
+}
+
+.editor-menu button.active {
+  border-bottom-color: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+/* Transfer view styling */
+.transfer-view {
+  padding: var(--_wl-editor_gap);
+  background: var(--md-sys-color-surface, #fffbfe);
+  border-radius: 8px;
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgba(0,0,0,0.1));
+}
+
+.transfer-view form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--_wl-editor_gap);
+  margin-bottom: var(--_wl-editor_gap);
+}
+
+.transfer-view label {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.transfer-view label:hover {
+  background-color: var(--md-sys-color-surface-variant, #e7e0ec);
+}
+
+.transfer-view input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+.transfer-view .actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s;
+}
+
+.transfer-view .actions button:first-child {
+  background-color: var(--md-sys-color-outline-variant, #cac4d0);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.transfer-view .actions button:first-child:hover {
+  background-color: var(--md-sys-color-outline, #938f99);
+}
+
+.transfer-view .actions button:last-child {
+  background-color: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-on-primary, #ffffff);
+}
+
+.transfer-view .actions button:last-child:hover {
+  background-color: var(--md-sys-color-primary-container, #eaddff);
+}
