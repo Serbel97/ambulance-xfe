@@ -216,6 +216,10 @@ export class XHospitalEditor {
     return this.roles;
   }
 
+  get isNewEntry() {
+    return this.entryId === '@new';
+  }
+
   render() {
     console.log('x-hospital-editor: render', {
       hasError: !!this.errorMessage,
@@ -239,12 +243,17 @@ export class XHospitalEditor {
     }
     return (
       <Host>
-        {/* menu buttons */}
-        <div class="editor-menu">
-          <button class={this.view === 'edit' ? 'active' : ''} onClick={() => this.view = 'edit'}>User data</button>
-          <button class={this.view === 'transfer' ? 'active' : ''} onClick={() => this.view = 'transfer'}>Transfer
-          </button>
-        </div>
+        {/* only show tabs for edit of existing entries */}
+        {!this.isNewEntry && (
+          <div class="editor-menu">
+            <button class={this.view === 'edit' ? 'active' : ''} onClick={() => this.view = 'edit'}>
+              User data
+            </button>
+            <button class={this.view === 'transfer' ? 'active' : ''} onClick={() => this.view = 'transfer'}>
+              Transfer
+            </button>
+          </div>
+        )}
         {this.view === 'edit' ? this.renderEdit() : this.renderTransfer()}
       </Host>
     );
@@ -253,7 +262,7 @@ export class XHospitalEditor {
   private renderEdit() {
     return (
       <div>
-        {/* Render the form fields */}
+
         <form ref={el => this.formElement = el}>
           <md-filled-text-field label="Name & Surname"
                                 required="" value={this.entry?.name}
@@ -273,38 +282,26 @@ export class XHospitalEditor {
         </form>
         <md-divider></md-divider>
         <div class="actions">
-          <md-filled-tonal-button id="delete" disabled={!this.entry || this.entry?.id === "@new"}
-                                  onClick={() => {
-                                    console.log('x-hospital-editor: Delete button clicked', {
-                                      entryId: this.entryId,
-                                      isDisabled: !this.entry || this.entry?.id === "@new"
-                                    });
-                                    this.deleteEntry();
-                                  }}>
-            <md-icon slot="icon">delete</md-icon>
-            Zmazať
-          </md-filled-tonal-button>
+          {!this.isNewEntry && (
+            <md-filled-tonal-button
+              id="delete"
+              onClick={() => this.deleteEntry()}
+            >
+              <md-icon slot="icon">delete</md-icon>
+              Delete
+            </md-filled-tonal-button>
+          )}
           <span class="stretch-fill"></span>
-          <md-outlined-button id="cancel" onClick={() => {
-            console.log('x-hospital-editor: Cancel button clicked');
-            try {
-              this.editorClosed.emit("cancel");
-              console.log('x-hospital-editor: editorClosed event emitted with "cancel"');
-            } catch (err) {
-              console.error('x-hospital-editor: Error emitting editorClosed event', err);
-            }
-          }}>
-            Zrušiť
+          <md-outlined-button id="cancel" onClick={() => this.editorClosed.emit("cancel")}>
+            Cancel
           </md-outlined-button>
-          <md-filled-button id="confirm" disabled={!this.isValid} onClick={() => {
-            console.log('x-hospital-editor: Save button clicked', {
-              isValid: this.isValid,
-              isDisabled: !this.isValid
-            });
-            this.updateEntry();
-          }}>
+          <md-filled-button
+            id="confirm"
+            disabled={!this.isValid}
+            onClick={() => this.updateEntry()}
+          >
             <md-icon slot="icon">save</md-icon>
-            Uložiť
+            {this.isNewEntry ? 'Create' : 'Save'}
           </md-filled-button>
         </div>
 
