@@ -7,7 +7,14 @@ on:
   push:
     branches: [ "main" ]
     tags:
-      - 'v1*'
+      - 'mercury*'
+      - 'venus*'
+      - 'earth*'
+      - 'mars*'
+      - 'jupiter*'
+      - 'saturn*'
+      - 'uranus*'
+      - 'neptune*'
   pull_request:
     branches: [ "main" ]
 
@@ -15,32 +22,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    # Set up a Docker DinD service container
-    #    services:
-    #      docker:
-    #        image: docker:20.10.16-dind
-    #        options: --privileged --log-driver=none
-    #        env:
-    #          DOCKER_TLS_CERTDIR: ""
-    #        ports:
-    #          - 2375:2375
-    #
-    #    # Configure environment variable to point Docker CLI to DinD
-    #    env:
-    #      DOCKER_HOST: tcp://localhost:2375
-
     strategy:
       matrix:
         node-version: [ 23.x ]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
       - uses: actions/checkout@v4
-
-      #      - name: Prepare OpenAPI Spec
-      #        run: |
-      #          mkdir -p input-spec
-      #          cp api/ambulance-wl.openapi.yaml input-spec/ambulance-wl.openapi.yaml
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -75,11 +61,8 @@ jobs:
             type=ref,event=branch
             type=ref,event=branch,suffix={{date '.YYYYMMDD.HHmm'}} # napr `main.20210930.1200`
             type=ref,event=tag
-            type=semver,pattern={{version}} # napr pri tagu  `v1.0.0`
-            type=semver,pattern={{major}}.{{minor}} # napr `1.0`
             type=semver,pattern={{major}}
-            type=raw,value=latest,enable={{is_default_branch}} # `latest` pre každý komit do main vetvy
-
+            type=raw,value=latest,enable={{is_default_branch}}
       - uses: docker/build-push-action@v2
         with:
           context: .
