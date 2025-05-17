@@ -1,12 +1,12 @@
 import {Component, Event, EventEmitter, h, Host, Prop, State} from '@stencil/core';
 import {
-  HospitalRolesApi,
-  HospitalEmployeeListApi,
-  HospitalsApi,
-  Hospital,
-  Role,
   Configuration,
-  EmployeeListEntry
+  EmployeeListEntry,
+  Hospital,
+  HospitalEmployeeListApi,
+  HospitalRolesApi,
+  HospitalsApi,
+  Role
 } from '../../api/hospital';
 
 @Component({
@@ -32,6 +32,10 @@ export class XHospitalEditor {
 
   private formElement: HTMLFormElement;
 
+  get isNewEntry() {
+    return this.entryId === '@new';
+  }
+
   async componentWillLoad() {
     console.log('x-hospital-editor: componentWillLoad', {
       entryId: this.entryId,
@@ -50,6 +54,60 @@ export class XHospitalEditor {
       rolesLoaded: this.roles?.length,
       isValid: this.isValid
     });
+  }
+
+  componentDidLoad() {
+    console.log('x-hospital-editor: componentDidLoad', {
+      entryId: this.entryId,
+      isValid: this.isValid,
+      hasError: !!this.errorMessage
+    });
+  }
+
+  componentDidUpdate() {
+    console.log('x-hospital-editor: componentDidUpdate', {
+      entryId: this.entryId,
+      isValid: this.isValid,
+      hasError: !!this.errorMessage
+    });
+  }
+
+  render() {
+    console.log('x-hospital-editor: render', {
+      hasError: !!this.errorMessage,
+      isLoading: this.dataLoading,
+      entryId: this.entryId,
+      isValid: this.isValid
+    });
+
+    if (this.errorMessage) {
+      console.log('x-hospital-editor: render - showing error message', {errorMessage: this.errorMessage});
+      return (
+        <Host>
+          <div class="error">{this.errorMessage}</div>
+        </Host>
+      )
+    }
+    if (this.dataLoading) {
+      return (<Host>
+        <div class="loading">Loading...</div>
+      </Host>);
+    }
+    return (
+      <Host>
+        {!this.isNewEntry && (
+          <div class="editor-menu">
+            <button class={this.view === 'edit' ? 'active' : ''} onClick={() => this.view = 'edit'}>
+              User data
+            </button>
+            <button class={this.view === 'transfer' ? 'active' : ''} onClick={() => this.view = 'transfer'}>
+              Transfer
+            </button>
+          </div>
+        )}
+        {this.view === 'edit' ? this.renderEdit() : this.renderTransfer()}
+      </Host>
+    );
   }
 
   private async getHospitals() {
@@ -82,22 +140,6 @@ export class XHospitalEditor {
     } catch (err: any) {
       this.errorMessage = `Transfer error: ${err.message}`;
     }
-  }
-
-  componentDidLoad() {
-    console.log('x-hospital-editor: componentDidLoad', {
-      entryId: this.entryId,
-      isValid: this.isValid,
-      hasError: !!this.errorMessage
-    });
-  }
-
-  componentDidUpdate() {
-    console.log('x-hospital-editor: componentDidUpdate', {
-      entryId: this.entryId,
-      isValid: this.isValid,
-      hasError: !!this.errorMessage
-    });
   }
 
   private async getEmployeeEntryAsync(): Promise<EmployeeListEntry> {
@@ -197,14 +239,12 @@ export class XHospitalEditor {
         });
       }
     } catch (err: any) {
-      // no strong dependency on roles
       console.warn('x-hospital-editor: getRoles - exception (non-critical)', {
         message: err.message,
         error: err
       });
     }
 
-    // always have some fallback role
     if (!this.roles || this.roles.length === 0) {
       console.log('x-hospital-editor: getRoles - using fallback role');
       this.roles = [{
@@ -214,49 +254,6 @@ export class XHospitalEditor {
     }
 
     return this.roles;
-  }
-
-  get isNewEntry() {
-    return this.entryId === '@new';
-  }
-
-  render() {
-    console.log('x-hospital-editor: render', {
-      hasError: !!this.errorMessage,
-      isLoading: this.dataLoading,
-      entryId: this.entryId,
-      isValid: this.isValid
-    });
-
-    if (this.errorMessage) {
-      console.log('x-hospital-editor: render - showing error message', {errorMessage: this.errorMessage});
-      return (
-        <Host>
-          <div class="error">{this.errorMessage}</div>
-        </Host>
-      )
-    }
-    if (this.dataLoading) {
-      return (<Host>
-        <div class="loading">Loading...</div>
-      </Host>);
-    }
-    return (
-      <Host>
-        {/* only show tabs for edit of existing entries */}
-        {!this.isNewEntry && (
-          <div class="editor-menu">
-            <button class={this.view === 'edit' ? 'active' : ''} onClick={() => this.view = 'edit'}>
-              User data
-            </button>
-            <button class={this.view === 'transfer' ? 'active' : ''} onClick={() => this.view = 'transfer'}>
-              Transfer
-            </button>
-          </div>
-        )}
-        {this.view === 'edit' ? this.renderEdit() : this.renderTransfer()}
-      </Host>
-    );
   }
 
   private renderEdit() {
@@ -347,7 +344,6 @@ export class XHospitalEditor {
     });
 
     let roles = this.roles || [];
-    // we want to have this.entry`s role in the selection list
     if (this.entry?.role) {
       const index = roles.findIndex(role => role.code === this.entry.role.code)
       console.log('x-hospital-editor: renderRoles - checking if entry role exists in roles list', {
@@ -414,7 +410,6 @@ export class XHospitalEditor {
     console.log('x-hospital-editor: handleInputEvent - input event received');
     const target = ev.target as HTMLInputElement;
 
-    // check validity of elements
     this.isValid = true;
     for (let i = 0; i < this.formElement.children.length; i++) {
       const element = this.formElement.children[i]

@@ -5,7 +5,7 @@
     "version": "6.6.0",
     "generators": {
       "hospital": {
-        "generatorName": "typescript-fetch"   ,
+        "generatorName": "typescript-fetch",
         "glob": "api/hospital.openapi.yaml",
         "output": "#{cwd}/src/api/hospital",
         "additionalProperties": {

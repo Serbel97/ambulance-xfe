@@ -1,19 +1,22 @@
 :host {
   display: block;
   background-color: #fff;
-  color: #000;                     /* guaranteed legibility */
+  color: #000;
   border-bottom: 1px solid #e0e0e0;
   font-family: Roboto, sans-serif;
 }
+
 .navbar {
   display: flex;
   align-items: center;
   padding: 0.75rem 1.5rem;
 }
+
 .navbar-brand {
   font-size: 1.5rem;
   font-weight: 500;
 }
+
 .navbar-items {
   margin-left: auto;
   display: flex;
@@ -21,51 +24,18 @@
   gap: 1.25rem;
 }
 
-/* Give the select a bit more breathing room */
 md-filled-select {
   min-width: 200px;
-  --md-filled-field-outline-color: #6200ee;   /* match your theme */
+  --md-filled-field-outline-color: #6200ee;
   --md-filled-field-focus-outline-color: #6200ee;
 }
+
 md-filled-select-option {
-  color: #000;  /* ensure options are visible */
+  color: #000;
 }
 
-/* tighten up button spacing */
 md-filled-button {
   --md-filled-button-padding-inline-start: 0.75rem;
   --md-filled-button-padding-inline-end: 0.75rem;
   font-size: 0.9rem;
 }
-
-/*:host {*/
-/*  display: block;*/
-/*  background-color: #ffffff;*/
-/*  border-bottom: 1px solid #e0e0e0;*/
-/*  color: #000000;*/
-/*  font-family: Roboto, sans-serif;*/
-/*}*/
-
-/*.navbar {*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  padding: 0.5rem 1rem;*/
-/*}*/
-
-/*.navbar-brand {*/
-/*  font-size: 1.25rem;*/
-/*  font-weight: 600;*/
-/*  margin-right: 2rem;*/
-/*}*/
-
-/*.navbar-items {*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  gap: 1rem;*/
-/*  margin-left: auto;*/
-/*}*/
-
-/*!* ensure the dropdown isn’t too narrow *!*/
-/*md-filled-select {*/
-/*  min-width: 150px;*/
-/*}*/

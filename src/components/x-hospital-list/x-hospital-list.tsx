@@ -15,15 +15,11 @@ export class XHospitalList {
 
   @State() employees: EmployeeListEntry[] = [];
 
-  // employees: EmployeeListEntry[];
-
   async componentWillLoad() {
     console.log('x-hospital-list: componentWillLoad', {apiBase: this.apiBase, hospitalId: this.hospitalId});
     return this.getEmployeeAsync();
   }
 
-
-  // ← this will run *after* the prop is updated
   @Watch('hospitalId')
   async hospitalChanged(newId: string) {
     console.log('x-hospital-list: hospitalId changed → reloading', {newId});
@@ -128,11 +124,9 @@ export class XHospitalList {
 
                   <div slot="headline">{employee.name}</div>
                   <md-icon slot="start">person</md-icon>
-                  { employee.role &&
-                       <div slot="supporting-text">{employee.role.value}</div>
-                     }
-                  {/*<div slot="supporting-text">{employee.role.value}</div>*/}
-
+                  {employee.role &&
+                    <div slot="supporting-text">{employee.role.value}</div>
+                  }
                 </md-list-item>
               )}
             </md-list>

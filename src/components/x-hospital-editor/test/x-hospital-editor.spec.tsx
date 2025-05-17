@@ -1,7 +1,7 @@
 import {newSpecPage} from '@stencil/core/testing';
 import {XHospitalEditor} from '../x-hospital-editor';
 import fetchMock from 'jest-fetch-mock';
-import {Role, EmployeeListEntry} from '../../../api/hospital';
+import {EmployeeListEntry, Role} from '../../../api/hospital';
 
 describe('x-hospital-editor', () => {
   const sampleEntry: EmployeeListEntry = {
@@ -52,7 +52,6 @@ describe('x-hospital-editor', () => {
 
     const items: any = await page.root.shadowRoot.querySelectorAll("md-filled-button");
     expect(items.length).toEqual(1);
-    // Continue with other assertions...
   });
 
   it('first text field is patient name', async () => {

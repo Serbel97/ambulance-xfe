@@ -50,7 +50,7 @@ export class XHospitalNavbar {
     history.pushState(null, '', newPath);
 
     // let the app catch it
-    window.dispatchEvent(new CustomEvent('hospital-changed', { detail: newId }));
+    window.dispatchEvent(new CustomEvent('hospital-changed', {detail: newId}));
   }
 
 
@@ -66,14 +66,6 @@ export class XHospitalNavbar {
             <md-filled-button onClick={() => this.handleClinicsClick()}>
               Clinics
             </md-filled-button>
-
-            {/*<md-filled-select*/}
-            {/*  label="Hospitals"*/}
-            {/*  value={this.selectedHospitalId}*/}
-            {/*  onMdFilledSelectChange={(ev: CustomEvent<string>) => {*/}
-            {/*    this.handleHospitalChange(ev);*/}
-            {/*  }}*/}
-            {/*>*/}
             <md-filled-select
               label="Hospitals"
               value={this.selectedHospitalId}

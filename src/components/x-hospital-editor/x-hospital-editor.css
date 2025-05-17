@@ -34,7 +34,6 @@ md-divider {
   margin-bottom: var(--_wl-editor_gap);
 }
 
-/* Editor menu buttons */
 .editor-menu {
   display: flex;
   gap: 1rem;
@@ -62,7 +61,6 @@ md-divider {
   color: var(--md-sys-color-primary, #6750a4);
 }
 
-/* Transfer view styling */
 .transfer-view {
   padding: var(--_wl-editor_gap);
   background: var(--md-sys-color-surface, #fffbfe);

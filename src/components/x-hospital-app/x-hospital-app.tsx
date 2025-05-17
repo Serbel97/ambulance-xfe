@@ -1,4 +1,4 @@
-import {Component, Host, Prop, State, h, Element, Listen} from '@stencil/core';
+import {Component, Element, h, Host, Listen, Prop, State} from '@stencil/core';
 
 declare global {
   interface Window {
@@ -14,26 +14,17 @@ declare global {
 
 export class XHospitalApp {
   @State() currentView: 'employees' | 'clinic' = 'employees';
-
-  @State() private isModalOpen = false;
-  @State() private modalEntryId = "@new";
   @Prop() basePath: string = "";
   @Prop() apiBase: string;
-  // @Prop() hospitalId: string;
   @Prop({mutable: true}) hospitalId: string;
   @Element() host!: HTMLElement;
-
-  /** Tab buttons in the navbar will emit this */
-  // @Listen('view-changed', { target: 'window' })
-  // handleViewChanged(ev: CustomEvent<'employees'|'clinics'>) {
-  //   this.currentView = ev.detail;
-  // }
+  @State() private isModalOpen = false;
+  @State() private modalEntryId = "@new";
 
   @Listen('view-changed', {target: 'window'})
   async handleViewChanged(ev: CustomEvent<'employees' | 'clinic'>) {
     this.currentView = ev.detail;
 
-    // If they clicked Employees, reload the list component:
     if (ev.detail === 'employees') {
       const list = this.host.shadowRoot!
         .querySelector('x-hospital-list') as any;
@@ -43,13 +34,10 @@ export class XHospitalApp {
     }
   }
 
-  @Listen('hospital-changed', { target: 'window' })
+  @Listen('hospital-changed', {target: 'window'})
   async handleHospitalChanged(ev: CustomEvent<string>) {
     console.log('App caught hospital-changed →', ev.detail);
     this.hospitalId = ev.detail;
-    // either rely on @Watch in your list, or…
-    // const list = this.host.shadowRoot!.querySelector('x-hospital-list') as any;
-    // if (list?.reload) await list.reload();
   }
 
   componentWillLoad() {
@@ -86,7 +74,6 @@ export class XHospitalApp {
       });
 
       try {
-        // Open modal for both new and existing patients
         this.isModalOpen = true;
         this.modalEntryId = ev.detail;
         console.log('x-hospital-app: Modal state updated', {
@@ -105,7 +92,6 @@ export class XHospitalApp {
       });
 
       try {
-        // Close the modal
         this.isModalOpen = false;
         console.log('x-hospital-app: Modal closed');
         const list = this.host.shadowRoot!.querySelector('x-hospital-list') as any;
@@ -120,8 +106,6 @@ export class XHospitalApp {
 
     return (
       <Host>
-
-        {/*<x-hospital-navbar apiBase={this.apiBase} hospitalId={this.hospitalId} />*/}
         <x-hospital-navbar
           apiBase={this.apiBase}
           hospitalId={this.hospitalId}
