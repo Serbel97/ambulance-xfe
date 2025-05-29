@@ -25,7 +25,7 @@ export class XHospitalEditor {
   @State() entry: EmployeeListEntry;
   @State() roles: Role[];
   @State() hospitals: Hospital[];
-  @State() view: 'edit' | 'transfer' = 'edit';
+  @State() view: 'edit' | 'transfer' | 'performance' = 'edit';
   @State() targetHospitalId: string;
   @State() errorMessage: string;
   @State() isValid: boolean;
