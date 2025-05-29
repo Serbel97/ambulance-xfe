@@ -151,6 +151,7 @@ export class XHospitalEditor {
       //TODO: create entry
       this.entry = {
         id: "@new",
+        performance: 0,
       };
       return this.entry;
     }
@@ -276,6 +277,27 @@ export class XHospitalEditor {
             <md-icon slot="leading-icon">person</md-icon>
           </md-filled-text-field>
           {this.renderRoles()}
+          <md-filled-text-field label="Performance Rating (0-10)"
+                                type="number"
+                                min="0"
+                                max="10"
+                                value={this.entry?.performance !== undefined ? this.entry.performance.toString() : "0"}
+                                oninput={(ev: InputEvent) => {
+                                  console.log('x-hospital-editor: performance field input event');
+                                  if (this.entry) {
+                                    const value = this.handleInputEvent(ev);
+                                    const numValue = parseInt(value);
+                                    if (!isNaN(numValue) && numValue >= 0 && numValue <= 10) {
+                                      this.entry.performance = numValue;
+                                      console.log('x-hospital-editor: performance updated', {
+                                        newPerformance: this.entry.performance,
+                                        isValid: this.isValid
+                                      });
+                                    }
+                                  }
+                                }}>
+            <md-icon slot="leading-icon">star</md-icon>
+          </md-filled-text-field>
         </form>
         <md-divider></md-divider>
         <div class="actions">
