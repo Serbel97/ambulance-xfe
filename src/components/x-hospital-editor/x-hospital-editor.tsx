@@ -775,4 +775,3 @@ export class XHospitalEditor {
     this.editingPerformance = undefined;
   }
 }
-}
