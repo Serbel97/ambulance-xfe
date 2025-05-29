@@ -44,6 +44,12 @@ export interface EmployeeListEntry {
      * @memberof EmployeeListEntry
      */
     role?: Role;
+    /**
+     * Performance rating of employee (0-10)
+     * @type {number}
+     * @memberof EmployeeListEntry
+     */
+    performance?: number;
 }
 
 /**
@@ -69,6 +75,7 @@ export function EmployeeListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         'id': json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'role': !exists(json, 'role') ? undefined : RoleFromJSON(json['role']),
+        'performance': !exists(json, 'performance') ? 0 : json['performance'],
     };
 }
 
@@ -84,6 +91,7 @@ export function EmployeeListEntryToJSON(value?: EmployeeListEntry | null): any {
         'id': value.id,
         'name': value.name,
         'role': RoleToJSON(value.role),
+        'performance': value.performance === undefined ? 0 : value.performance,
     };
 }
 
