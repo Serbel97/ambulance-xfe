@@ -6,6 +6,7 @@ import {
   HospitalEmployeeListApi,
   HospitalRolesApi,
   HospitalsApi,
+  PerformanceEntry,
   Role
 } from '../../api/hospital';
 
@@ -29,6 +30,8 @@ export class XHospitalEditor {
   @State() errorMessage: string;
   @State() isValid: boolean;
   @State() dataLoading: boolean = true;
+  @State() editingPerformance: PerformanceEntry;
+  @State() selectedPerformanceId: string;
 
   private formElement: HTMLFormElement;
 
@@ -103,9 +106,16 @@ export class XHospitalEditor {
             <button class={this.view === 'transfer' ? 'active' : ''} onClick={() => this.view = 'transfer'}>
               Transfer
             </button>
+            <button class={this.view === 'performance' ? 'active' : ''} onClick={() => this.view = 'performance'}>
+              Performance details
+            </button>
           </div>
         )}
-        {this.view === 'edit' ? this.renderEdit() : this.renderTransfer()}
+        {this.view === 'edit'
+          ? this.renderEdit()
+          : this.view === 'transfer'
+            ? this.renderTransfer()
+            : this.renderPerformance()}
       </Host>
     );
   }
@@ -152,6 +162,7 @@ export class XHospitalEditor {
       this.entry = {
         id: "@new",
         performance: 0,
+        performances: []
       };
       return this.entry;
     }
@@ -359,6 +370,148 @@ export class XHospitalEditor {
     );
   }
 
+  private renderPerformance() {
+    if (!this.entry.performances) {
+      this.entry.performances = [];
+    }
+
+    return (
+      <div class="performance-view">
+        {this.entry.performances.length === 0 ? (
+          <div class="empty-performance">
+            No performance entries yet. Add one below.
+          </div>
+        ) : (
+          this.entry.performances.map((performance) => (
+            <div class="performance-entry">
+              <div class="performance-entry-row">
+                <div><strong>Activity:</strong> {performance.activityType}</div>
+                <div><strong>Patient:</strong> {performance.patientName}</div>
+                <div><strong>Date:</strong> {performance.activityDate}</div>
+              </div>
+              <div>
+                <strong>Details:</strong>
+                <p>{performance.details}</p>
+              </div>
+              <div class="performance-actions">
+                <button
+                  onClick={() => this.editPerformance(performance.id)}
+                  disabled={this.selectedPerformanceId !== undefined}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => this.deletePerformance(performance.id)}
+                  disabled={this.selectedPerformanceId !== undefined}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+
+        {this.renderPerformanceForm()}
+
+        <div class="actions">
+          <md-outlined-button id="cancel" onClick={() => this.editorClosed.emit("cancel")}>
+            Cancel
+          </md-outlined-button>
+          <md-filled-button
+            id="confirm"
+            onClick={() => this.updateEntry()}
+          >
+            <md-icon slot="icon">save</md-icon>
+            Save
+          </md-filled-button>
+        </div>
+
+        {this.errorMessage && <div class="error">{this.errorMessage}</div>}
+      </div>
+    );
+  }
+
+  private renderPerformanceForm() {
+    const isEditing = !!this.selectedPerformanceId;
+    const emptyPerformance: PerformanceEntry = {
+      id: crypto.randomUUID(),
+      activityType: 'examination',
+      patientName: '',
+      activityDate: '',
+      details: ''
+    };
+
+    const performance = this.editingPerformance || emptyPerformance;
+    const detailsLength = performance.details?.length || 0;
+
+    return (
+      <div class="performance-entry">
+        <h3>{isEditing ? 'Edit Performance Entry' : 'Add New Performance Entry'}</h3>
+        <div class="performance-entry-form">
+          <div class="performance-entry-row">
+            <md-filled-select
+              label="Activity Type"
+              value={performance.activityType}
+              onInput={(ev: InputEvent) => this.handlePerformanceInput(ev, 'activityType')}
+            >
+              <md-select-option value="examination" selected={performance.activityType === 'examination'}>
+                <div slot="headline">Examination</div>
+              </md-select-option>
+              <md-select-option value="surgery" selected={performance.activityType === 'surgery'}>
+                <div slot="headline">Surgery</div>
+              </md-select-option>
+              <md-select-option value="preoperative consultation" selected={performance.activityType === 'preoperative consultation'}>
+                <div slot="headline">Preoperative Consultation</div>
+              </md-select-option>
+              <md-select-option value="checkup" selected={performance.activityType === 'checkup'}>
+                <div slot="headline">Checkup</div>
+              </md-select-option>
+            </md-filled-select>
+
+            <md-filled-text-field
+              label="Patient Name"
+              placeholder="Name of patient"
+              value={performance.patientName}
+              onInput={(ev: InputEvent) => this.handlePerformanceInput(ev, 'patientName')}
+            ></md-filled-text-field>
+
+            <md-filled-text-field
+              label="Date of Action"
+              placeholder="DD/MM/YY"
+              value={performance.activityDate}
+              onInput={(ev: InputEvent) => this.handlePerformanceInput(ev, 'activityDate')}
+            ></md-filled-text-field>
+          </div>
+
+          <div>
+            <textarea
+              class="details-textarea"
+              placeholder="Details of operation"
+              maxlength="255"
+              value={performance.details}
+              onInput={(ev: InputEvent) => this.handlePerformanceInput(ev, 'details')}
+            ></textarea>
+            <div class="char-counter">{detailsLength}/255</div>
+          </div>
+
+          <div class="performance-actions">
+            {isEditing && (
+              <button onClick={() => this.cancelEditPerformance()}>
+                Cancel Edit
+              </button>
+            )}
+            <button
+              onClick={() => this.savePerformance()}
+              disabled={!performance.patientName || !performance.activityDate}
+            >
+              {isEditing ? 'Update' : 'Add'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   private renderRoles() {
     console.log('x-hospital-editor: renderRoles - starting', {
       rolesCount: this.roles?.length,
@@ -551,4 +704,75 @@ export class XHospitalEditor {
       });
     }
   }
+
+  
+  private handlePerformanceInput(ev: InputEvent, field: keyof PerformanceEntry) {
+    const target = ev.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+    const value = target.value;
+
+    if (!this.editingPerformance) {
+      this.editingPerformance = {
+        id: crypto.randomUUID(),
+        activityType: 'examination',
+        patientName: '',
+        activityDate: '',
+        details: ''
+      };
+    }
+
+    this.editingPerformance = {
+      ...this.editingPerformance,
+      [field]: value
+    };
+  }
+
+  private savePerformance() {
+    if (!this.entry.performances) {
+      this.entry.performances = [];
+    }
+
+    if (this.selectedPerformanceId) {
+      // Update existing performance
+      const index = this.entry.performances.findIndex(p => p.id === this.selectedPerformanceId);
+      if (index !== -1 && this.editingPerformance) {
+        this.entry.performances[index] = this.editingPerformance;
+      }
+    } else {
+      // Add new performance
+      if (this.editingPerformance) {
+        this.entry.performances.push(this.editingPerformance);
+      }
+    }
+
+    // Reset editing state
+    this.selectedPerformanceId = undefined;
+    this.editingPerformance = undefined;
+  }
+
+  private editPerformance(id: string) {
+    if (!this.entry.performances) return;
+
+    const performance = this.entry.performances.find(p => p.id === id);
+    if (performance) {
+      this.selectedPerformanceId = id;
+      this.editingPerformance = { ...performance };
+    }
+  }
+
+  private deletePerformance(id: string) {
+    if (!this.entry.performances) return;
+
+    const index = this.entry.performances.findIndex(p => p.id === id);
+    if (index !== -1) {
+      this.entry.performances.splice(index, 1);
+      // Force re-render
+      this.entry = { ...this.entry };
+    }
+  }
+
+  private cancelEditPerformance() {
+    this.selectedPerformanceId = undefined;
+    this.editingPerformance = undefined;
+  }
+}
 }
