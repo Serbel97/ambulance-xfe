@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property     | Attribute     | Description | Type     | Default     |
-| ------------ | ------------- | ----------- | -------- | ----------- |
-| `apiBase`    | `api-base`    |             | `string` | `undefined` |
-| `hospitalId` | `hospital-id` |             | `string` | `undefined` |
+| Property                  | Attribute     | Description | Type     | Default     |
+| ------------------------- | ------------- | ----------- | -------- | ----------- |
+| `apiBase`                 | `api-base`    |             | `string` | `undefined` |
+| `hospitalId` _(required)_ | `hospital-id` |             | `string` | `undefined` |
 
 
 ## Events
