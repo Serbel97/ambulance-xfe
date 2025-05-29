@@ -119,3 +119,69 @@ md-divider {
 .transfer-view .actions button:last-child:hover {
   background-color: var(--md-sys-color-primary-container, #eaddff);
 }
+
+.performance-view {
+  padding: var(--_wl-editor_gap);
+  background: var(--md-sys-color-surface, #fffbfe);
+  border-radius: 8px;
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 2px rgba(0,0,0,0.1));
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.performance-entry {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-variant, #e7e0ec);
+}
+
+.performance-entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.performance-entry-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.performance-entry-row > * {
+  flex: 1;
+}
+
+.details-textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  padding: 0.5rem;
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.char-counter {
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--md-sys-color-outline, #938f99);
+}
+
+.performance-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.empty-performance {
+  padding: 1rem;
+  text-align: center;
+  color: var(--md-sys-color-outline, #938f99);
+}
+
+.add-performance {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
