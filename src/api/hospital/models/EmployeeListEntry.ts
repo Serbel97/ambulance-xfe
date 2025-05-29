@@ -19,6 +19,12 @@ import {
     RoleFromJSONTyped,
     RoleToJSON,
 } from './Role';
+import type { PerformanceEntry } from './PerformanceEntry';
+import {
+    PerformanceEntryFromJSON,
+    PerformanceEntryFromJSONTyped,
+    PerformanceEntryToJSON,
+} from './PerformanceEntry';
 
 /**
  * 
@@ -50,6 +56,12 @@ export interface EmployeeListEntry {
      * @memberof EmployeeListEntry
      */
     performance?: number;
+    /**
+     * List of performance entries for this employee
+     * @type {Array<PerformanceEntry>}
+     * @memberof EmployeeListEntry
+     */
+    performances?: Array<PerformanceEntry>;
 }
 
 /**
@@ -76,6 +88,7 @@ export function EmployeeListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         'name': !exists(json, 'name') ? undefined : json['name'],
         'role': !exists(json, 'role') ? undefined : RoleFromJSON(json['role']),
         'performance': !exists(json, 'performance') ? 0 : json['performance'],
+        'performances': !exists(json, 'performances') ? [] : ((json['performances'] as Array<any>).map(PerformanceEntryFromJSON)),
     };
 }
 
@@ -92,6 +105,7 @@ export function EmployeeListEntryToJSON(value?: EmployeeListEntry | null): any {
         'name': value.name,
         'role': RoleToJSON(value.role),
         'performance': value.performance === undefined ? 0 : value.performance,
+        'performances': value.performances === undefined ? [] : ((value.performances as Array<any>).map(PerformanceEntryToJSON)),
     };
 }
 
