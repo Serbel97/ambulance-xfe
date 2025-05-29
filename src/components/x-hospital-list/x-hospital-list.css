@@ -64,3 +64,12 @@ md-list-item:hover {
   border-radius: 4px;
   background-color: var(--md-sys-color-error-container, #f9dedc);
 }
+
+.performance-rating {
+  font-weight: 500;
+  color: var(--md-sys-color-primary, #6750a4);
+  background-color: var(--md-sys-color-surface-variant, #e7e0ec);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
