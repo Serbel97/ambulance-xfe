@@ -127,6 +127,9 @@ export class XHospitalList {
                   {employee.role &&
                     <div slot="supporting-text">{employee.role.value}</div>
                   }
+                  <div slot="end" class="performance-rating">
+                    {employee.performance !== undefined ? employee.performance : 0}/10
+                  </div>
                 </md-list-item>
               )}
             </md-list>
