@@ -73,3 +73,9 @@ md-list-item:hover {
   border-radius: 4px;
   margin-left: 0.5rem;
 }
+
+md-list-item::part(headline),
+md-list-item::part(supporting-text) {
+  color: black;
+}
+
