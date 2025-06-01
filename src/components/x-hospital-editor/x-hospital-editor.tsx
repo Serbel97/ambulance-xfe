@@ -395,13 +395,13 @@ export class XHospitalEditor {
               </div>
               <div class="performance-actions">
                 <button
-                  onClick={() => this.editPerformance(performance.id)}
+                  onClick={async () => await this.editPerformance(performance.id)}
                   disabled={this.selectedPerformanceId !== undefined}
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => this.deletePerformance(performance.id)}
+                  onClick={async () => await this.deletePerformance(performance.id)}
                   disabled={this.selectedPerformanceId !== undefined}
                 >
                   Delete
@@ -501,7 +501,7 @@ export class XHospitalEditor {
               </button>
             )}
             <button
-              onClick={() => this.savePerformance()}
+              onClick={async () => await this.savePerformance()}
               disabled={!performance.patientName || !performance.activityDate}
             >
               {isEditing ? 'Update' : 'Add'}
@@ -726,7 +726,7 @@ export class XHospitalEditor {
     };
   }
 
-  private savePerformance() {
+  private async savePerformance() {
     if (!this.entry.performances) {
       this.entry.performances = [];
     }
@@ -747,19 +747,25 @@ export class XHospitalEditor {
     // Reset editing state
     this.selectedPerformanceId = undefined;
     this.editingPerformance = undefined;
+
+    // Save changes to the backend
+    await this.updateEntry();
   }
 
-  private editPerformance(id: string) {
+  private async editPerformance(id: string) {
     if (!this.entry.performances) return;
 
     const performance = this.entry.performances.find(p => p.id === id);
     if (performance) {
       this.selectedPerformanceId = id;
       this.editingPerformance = { ...performance };
+
+      // Save changes to the backend
+      await this.updateEntry();
     }
   }
 
-  private deletePerformance(id: string) {
+  private async deletePerformance(id: string) {
     if (!this.entry.performances) return;
 
     const index = this.entry.performances.findIndex(p => p.id === id);
@@ -767,6 +773,9 @@ export class XHospitalEditor {
       this.entry.performances.splice(index, 1);
       // Force re-render
       this.entry = { ...this.entry };
+
+      // Save changes to the backend
+      await this.updateEntry();
     }
   }
 
