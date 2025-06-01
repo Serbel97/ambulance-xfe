@@ -608,7 +608,7 @@ export class XHospitalEditor {
     return target.value;
   }
 
-  private async updateEntry() {
+  private async updateEntry(closeEditor: boolean = true) {
     console.log('x-hospital-editor: updateEntry - starting', {
       entryId: this.entryId,
       isNew: this.entryId === "@new",
