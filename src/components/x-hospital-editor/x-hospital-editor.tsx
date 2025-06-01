@@ -419,7 +419,7 @@ export class XHospitalEditor {
           </md-outlined-button>
           <md-filled-button
             id="confirm"
-            onClick={() => this.updateEntry()}
+            onClick={() => this.updateEntry(true)}
           >
             <md-icon slot="icon">save</md-icon>
             Save
@@ -612,7 +612,8 @@ export class XHospitalEditor {
     console.log('x-hospital-editor: updateEntry - starting', {
       entryId: this.entryId,
       isNew: this.entryId === "@new",
-      entry: this.entry
+      entry: this.entry,
+      closeEditor: closeEditor
     });
 
     try {
@@ -645,8 +646,12 @@ export class XHospitalEditor {
       });
 
       if (response.raw.status < 299) {
-        console.log('x-hospital-editor: updateEntry - success, emitting editor-closed event');
-        this.editorClosed.emit("store");
+        if (closeEditor) {
+          console.log('x-hospital-editor: updateEntry - success, emitting editor-closed event');
+          this.editorClosed.emit("store");
+        } else {
+          console.log('x-hospital-editor: updateEntry - success, not closing editor');
+        }
       } else {
         this.errorMessage = `Cannot store entry: ${response.raw.statusText}`;
         console.error('x-hospital-editor: updateEntry - error response', {
@@ -748,8 +753,8 @@ export class XHospitalEditor {
     this.selectedPerformanceId = undefined;
     this.editingPerformance = undefined;
 
-    // Save changes to the backend
-    await this.updateEntry();
+     // Save changes to the backend without closing the editor
+    await this.updateEntry(false);
   }
 
   private async editPerformance(id: string) {
@@ -775,7 +780,7 @@ export class XHospitalEditor {
       this.entry = { ...this.entry };
 
       // Save changes to the backend
-      await this.updateEntry();
+      await this.updateEntry(false);
     }
   }
 
